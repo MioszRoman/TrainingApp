@@ -1,0 +1,26 @@
+[
+  {
+    "IdPlanu": 2,
+    "NazwaPlanu": "Dwojka",
+    "DataTreningu": "2026-04-08T12:51:40.3474578+02:00",
+    "CzasTrwania": 138.58
+  },
+  {
+    "IdPlanu": 2,
+    "NazwaPlanu": "Dwojka",
+    "DataTreningu": "2026-04-09T08:51:40.3474578+02:00",
+    "CzasTrwania": 600.58
+  },
+  {
+    "IdPlanu": 3,
+    "NazwaPlanu": "Trójka",
+    "DataTreningu": "2026-04-08T11:51:40.3474578+02:00",
+    "CzasTrwania": 800.58
+  },
+  {
+    "IdPlanu": 4,
+    "NazwaPlanu": "Czwórka",
+    "DataTreningu": "2026-04-09T10:51:40.3474578+02:00",
+    "CzasTrwania": 1244.58
+  }
+]

@@ -1,0 +1,68 @@
+[
+  {
+    "Nazwa": "Dwojka",
+    "Poziom": 5,
+    "Rodzaj": "Si\u0142owy",
+    "IloscObwodow": 2,
+    "Id": 2,
+    "PrzerwaMiedzyObwodami": 60,
+    "Cwiczenia": [
+      {
+        "NazwaCwiczenia": "Pompki",
+        "LiczbaSerii": 2,
+        "LiczbaPowtorzen": 10,
+        "PrzerwaMiedzySeriami": 5
+      },
+      {
+        "NazwaCwiczenia": "Przysiady",
+        "LiczbaSerii": 2,
+        "LiczbaPowtorzen": 15,
+        "PrzerwaMiedzySeriami": 5
+      }
+    ]
+  },
+  {
+    "Nazwa": "Trojka",
+    "Poziom": 10,
+    "Rodzaj": "Cardio",
+    "IloscObwodow": 2,
+    "Id": 3,
+    "PrzerwaMiedzyObwodami": 60,
+    "Cwiczenia": [
+      {
+        "NazwaCwiczenia": "Sprint",
+        "LiczbaSerii": 5,
+        "LiczbaPowtorzen": 80,
+        "PrzerwaMiedzySeriami": 120
+      },
+      {
+        "NazwaCwiczenia": "Trucht",
+        "LiczbaSerii": 5,
+        "LiczbaPowtorzen": 100,
+        "PrzerwaMiedzySeriami": 120
+      }
+    ]
+  },
+  {
+    "Nazwa": "JedynkaE",
+    "Poziom": 9,
+    "Rodzaj": "Silowy",
+    "IloscObwodow": 3,
+    "Id": 4,
+    "PrzerwaMiedzyObwodami": 120,
+    "Cwiczenia": [
+      {
+        "NazwaCwiczenia": "Przysiady",
+        "LiczbaSerii": 2,
+        "LiczbaPowtorzen": 10,
+        "PrzerwaMiedzySeriami": 10
+      },
+      {
+        "NazwaCwiczenia": "Pompki",
+        "LiczbaSerii": 3,
+        "LiczbaPowtorzen": 15,
+        "PrzerwaMiedzySeriami": 45
+      }
+    ]
+  }
+]
