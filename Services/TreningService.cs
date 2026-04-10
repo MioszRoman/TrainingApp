@@ -14,7 +14,7 @@ class TreningService
     private List<SesjaObwodu> listaObwodow = new List<SesjaObwodu>();
     private List<SesjaSerii> listaSerii = new List<SesjaSerii>();
     private List<HistoriaTreningu> historia = new List<HistoriaTreningu>();
-    private string sciezkaHistorii = "Historia.json";
+    private string sciezkaHistorii = Path.Combine("Data", "Historia.json");
 
     private JsonSerializerOptions JsonOptions()
     {
