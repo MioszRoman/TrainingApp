@@ -1,8 +1,8 @@
 using System;
 
-namespace TreningApp;
+namespace TreningApp.Models;
 
-class SesjaSerii
+public class SesjaSerii
 {
     public Plan PlanTreningowy {get; set;}
     public Cwiczenie Cwiczenie {get; set;}
@@ -18,15 +18,5 @@ class SesjaSerii
         DataRozpoczeciaSerii = dataRozpoczeciaSerii;
         CzasTrwaniaSerii = czasTrwaniaSerii;
         NumerObwodu = numerObwodu;
-    }
-    public void WyswietlSesjeSerii()
-    {
-        Console.WriteLine("===========================================");
-        Console.WriteLine("Obwod: " + NumerObwodu);
-        Console.WriteLine("Ćwiczenie: " + Cwiczenie.NazwaCwiczenia);
-        Console.WriteLine("Seria: " + NumerSerii + " z " + Cwiczenie.LiczbaSerii);
-        Console.WriteLine("Data rozpoczęcia serii: " + DataRozpoczeciaSerii);
-        Console.WriteLine("Czas trwania serii: " + CzasTrwaniaSerii.TotalSeconds + " sekund");
-        Console.WriteLine("===========================================");
     }
 }

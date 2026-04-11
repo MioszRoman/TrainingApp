@@ -1,6 +1,6 @@
 using System;
 
-namespace TreningApp;
+namespace TreningApp.Models;
 
 class HistoriaTreningu
 {

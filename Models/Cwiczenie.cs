@@ -1,8 +1,8 @@
 using System;
 
-namespace TreningApp;
+namespace TreningApp.Models;
 
-class Cwiczenie
+public class Cwiczenie
 {
     public string NazwaCwiczenia {get; set;}
     public int LiczbaSerii {get; set;}
@@ -14,13 +14,5 @@ class Cwiczenie
         LiczbaSerii = liczbaSerii;
         LiczbaPowtorzen = liczbaPowtorzen;
         PrzerwaMiedzySeriami = przerwaMiedzySeriami;
-    }
-    public void WyswietlCwiczenie()
-    {
-        Console.WriteLine("Ćwiczenie: " + NazwaCwiczenia);
-        Console.WriteLine("Serii: " + LiczbaSerii);
-        Console.WriteLine("Powtorzeń: " + LiczbaPowtorzen);
-        Console.WriteLine("Przerwa miedzy seriami: " + PrzerwaMiedzySeriami + " sekund");
-        Console.WriteLine("===========================================");
     }
 }

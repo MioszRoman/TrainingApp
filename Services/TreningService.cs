@@ -5,6 +5,8 @@ using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization.Metadata;
 using System.Linq;
+using TreningApp.Models;
+using TreningApp.UI;
 
 namespace TreningApp;
 
@@ -14,6 +16,7 @@ class TreningService
     private List<SesjaObwodu> listaObwodow = new List<SesjaObwodu>();
     private List<SesjaSerii> listaSerii = new List<SesjaSerii>();
     private List<HistoriaTreningu> historia = new List<HistoriaTreningu>();
+    private ConsoleRenderer renderer = new ConsoleRenderer();
     private string sciezkaHistorii = Path.Combine("Data", "Historia.json");
 
     private JsonSerializerOptions JsonOptions()
@@ -240,15 +243,15 @@ class TreningService
         Console.WriteLine("===========================================");
         foreach(var trening in listaTreningow)
         {
-            trening.WyswietlSesje();
+            renderer.WyswietlSesje(trening);
             foreach(var obwod in listaObwodow)
             {
-                obwod.WyswietlSesjeObwodu();
+                renderer.WyswietlSesjeObwodu(obwod);
                 foreach(var seria in listaSerii)
                 {
                     if(seria.NumerObwodu == obwod.NumerObwodu) // Wyświetl tylko serie, które należały do danego obwodu
                     {
-                    seria.WyswietlSesjeSerii();
+                    renderer.WyswietlSesjeSerii(seria);
                     }
                 }   
             }

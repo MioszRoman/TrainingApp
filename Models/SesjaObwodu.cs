@@ -1,8 +1,8 @@
 using System;
 
-namespace TreningApp;
+namespace TreningApp.Models;
 
-class SesjaObwodu
+public class SesjaObwodu
 {
     public Plan PlanTreningowy {get; set;}
     public DateTime DataRozpoczecia {get; set;}
@@ -14,13 +14,5 @@ class SesjaObwodu
         DataRozpoczecia = dataRozpoczecia;
         CzasTrwaniaObwodu = czasTrwaniaObwodu;
         NumerObwodu = numerObwodu;
-    }
-    public void WyswietlSesjeObwodu()
-    {
-        Console.WriteLine("===========================================");
-        Console.WriteLine("Obwod: " + NumerObwodu);
-        Console.WriteLine("Data rozpoczęcia obwodu: " + DataRozpoczecia);
-        Console.WriteLine("Czas trwania obwodu: " + CzasTrwaniaObwodu.TotalSeconds + " sekund");
-        Console.WriteLine("===========================================");
     }
 }

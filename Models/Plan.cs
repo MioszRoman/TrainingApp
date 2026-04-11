@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 
-namespace TreningApp;
+namespace TreningApp.Models;
 
-class Plan
+public class Plan
 {
     public string Nazwa {get; set;}
     public int Poziom {get; set;}
@@ -22,24 +22,4 @@ class Plan
         Id = id;
         Cwiczenia = cwiczenia;
     }
-    public void WyswietlPlan()
-    {
-        Console.WriteLine("Id treningu: " + Id);
-        Console.WriteLine("Trening: " + Nazwa);
-        Console.WriteLine("Poziom trudności: " + Poziom);
-        Console.WriteLine("Rodzaj: " + Rodzaj);
-        Console.WriteLine("Ilość obwodów: " + IloscObwodow);
-        Console.WriteLine("Ilość ćwiczeń: " + Cwiczenia.Count);
-        Console.WriteLine("-------------------------------------------");
-        //Cwiczenia.ForEach(c => c.WyswietlCwiczenie()); - Druga opcja wyswietlania cwiczen, trochę bardziej elegancka i na wyższy poziom, 
-        //ale nieco mniej czytelna dla początkujących programistów, dlatego zostawiłem tą bardziej klasyczną pętlę foreach.
-    }
-    public void WyswietlCwiczenia()
-        {
-            Console.WriteLine("Ćwiczenia: ");
-            foreach(var cwiczenie in Cwiczenia)
-            {
-                cwiczenie.WyswietlCwiczenie();
-            }
-        }
 }

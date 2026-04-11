@@ -5,19 +5,19 @@
     "Rodzaj": "Si\u0142owy",
     "IloscObwodow": 2,
     "Id": 2,
-    "PrzerwaMiedzyObwodami": 60,
+    "PrzerwaMiedzyObwodami": 3,
     "Cwiczenia": [
       {
         "NazwaCwiczenia": "Pompki",
         "LiczbaSerii": 2,
         "LiczbaPowtorzen": 10,
-        "PrzerwaMiedzySeriami": 5
+        "PrzerwaMiedzySeriami": 2
       },
       {
         "NazwaCwiczenia": "Przysiady",
         "LiczbaSerii": 2,
         "LiczbaPowtorzen": 15,
-        "PrzerwaMiedzySeriami": 5
+        "PrzerwaMiedzySeriami": 2
       }
     ]
   },

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using TreningApp.Models;
 
 namespace TreningApp;
 

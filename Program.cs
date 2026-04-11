@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Numerics;
+using TreningApp.Models;
+using TreningApp.UI;
 
 namespace TreningApp;
 
@@ -8,6 +10,7 @@ class Program
 {   
     static PlanService planService = new PlanService();
     static TreningService treningService = new TreningService();
+    static ConsoleRenderer renderer = new ConsoleRenderer(); 
     static InputHelper inputHelper = new InputHelper();
     static bool isRunning = true;
     static void Main(string[] args)
@@ -28,7 +31,7 @@ class Program
                     Console.WriteLine("-------------------------------------------");
                     foreach(var plan in planService.GetPlany())
                     {
-                        plan.WyswietlPlan();
+                        renderer.WyswietlPlan(plan);
                     }
                     break;
                 case "3":
@@ -39,8 +42,7 @@ class Program
                     Console.WriteLine("===========================================");
                     foreach(var plan in planService.GetPlany())
                     {
-                        plan.WyswietlPlan();
-                        plan.WyswietlCwiczenia();
+                        renderer.WyswietlPlanZCwiczeniami(plan);
                     }
                     break;
                 case "5":
