@@ -12,10 +12,11 @@ class Program
     static TreningService treningService = new TreningService();
     static ConsoleRenderer renderer = new ConsoleRenderer(); 
     static InputHelper inputHelper = new InputHelper();
+    static HistoriaService historiaService = new HistoriaService();
     static bool isRunning = true;
     static void Main(string[] args)
     {
-        treningService.OdczytHistorii();
+        historiaService.OdczytHistorii();
         planService.OdczytPlanow();
         while (isRunning)
         {
@@ -53,18 +54,18 @@ class Program
                     EdytujPlan();
                     break;
                 case "7":
-                    treningService.WyswietlHistorieTreningu();
+                    historiaService.WyswietlHistorieTreningu();
                     break;
                 case "8":
                     int idDoWyszukania = inputHelper.PobierzLiczbe("Podaj ID planu, który chcesz zobaczyć w historii: ", 1, 100, "Nie ma takiego planu w historii!");
-                    treningService.WyswietlHistoriePlanu(idDoWyszukania);
+                    historiaService.WyswietlHistoriePlanu(idDoWyszukania);
                     break;
                 case "9":
                     FiltrujHistoriePoDacie();
                     break;
                 case "10":
                     int idDoUsunieciaHistorii = inputHelper.PobierzLiczbe("Podaj ID planu, który chcesz usunąć: ", 1, 100, "Nie udało się pobrać ID");
-                    treningService.UsunWpisHistoriiPoId(idDoUsunieciaHistorii);
+                    historiaService.UsunWpisHistoriiPoId(idDoUsunieciaHistorii);
                     break;
                 case "11":
                     treningService.WyswietlStatystyki();
@@ -174,7 +175,7 @@ class Program
             Console.WriteLine("Prawdopodobnie podałeś datę odwrotnie. Upewnij się że są one poprawne!");
             return;
         }
-        treningService.WyswietlHistorieZData(od, doKiedy);
+        historiaService.WyswietlHistorieZData(od, doKiedy);
     }
     static void EdytujPlan()
     {
