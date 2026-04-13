@@ -3,13 +3,11 @@ using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization.Metadata;
 using TreningApp.Models;
-using TreningApp.UI;
 
 namespace TreningApp;
 
 class HistoriaService
 {
-    //private  List<HistoriaTreningu> historia = new List<HistoriaTreningu>();
     private List<HistoriaTreningu> historia = new();
     private readonly string sciezkaHistorii = Path.Combine("Data", "Historia.json");
     private readonly JsonSerializerOptions options = new JsonSerializerOptions
@@ -21,7 +19,6 @@ class HistoriaService
     {
         string jsonString = JsonSerializer.Serialize(historia, options);
         File.WriteAllText(sciezkaHistorii, jsonString);
-        //Console.WriteLine("Zapisano pomyślnie do pliku Plany.json");
     }
     public void OdczytHistorii()
     {

@@ -11,6 +11,7 @@ class Program
     static ConsoleRenderer renderer = new ConsoleRenderer(); 
     static InputHelper inputHelper = new InputHelper();
     static HistoriaService historiaService = new HistoriaService();
+    static StatystykiService statystykiService = new StatystykiService();
     static bool isRunning = true;
     static void Main(string[] args)
     {
@@ -87,7 +88,8 @@ class Program
                     }
                     break;
                 case "11":
-                    treningService.WyswietlStatystyki();
+                    var wpisyDoStatystyk = historiaService.PobierzWszystkieWpisy();
+                    statystykiService.WyswietlStatystyki(wpisyDoStatystyk);
                     break;
                 case "12":
                     renderer.PokazKomunikat("Zamykam aplikację...");
