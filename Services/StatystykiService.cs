@@ -4,97 +4,91 @@ using TreningApp.Models;
 using TreningApp.UI;
 class StatystykiService
 {
-    private readonly ConsoleRenderer renderer = new ConsoleRenderer(); 
-
-    public string FormatujCzas(double calyCzas)
+    public Statystyki PobierzStatystyki(List<HistoriaTreningu> historia)
     {
-        int wszystkieSekundy = (int)calyCzas;
-        int minuty = wszystkieSekundy / 60;
-        int sekundy = wszystkieSekundy % 60;
-        string komunikat = $"{minuty} min {sekundy} s";
-        return komunikat;
-    }
-
-    public void WyswietlStatystyki(List<HistoriaTreningu> historia)
-    {
-        //Ilość treningów 
-        if(historia.Count == 0)
+        if(historia.Count() == 0)
         {
-            renderer.PokazBlad("Brak historii treningów.");
-            return;
+            return null;
         }
-        renderer.PokazKomunikat($"Ilość treningów: {historia.Count}");
-        renderer.PokazKomunikat($"Łączny czas treningów: {LacznyCzas(historia)}");
-        renderer.PokazKomunikat($"Średni czas treningów: {SredniCzas(historia)}");
-        NajczesciejWykonywanyTrening(historia);
-        PoszczegolneWykonania(historia);
-        NajdluzszyTrening(historia);
-        NajkrotszyTrening(historia);
-        NajdluzszyWTygodniu(historia);        
+        int ilosc = historia.Count();
+        int lacznyCzas = LacznyCzas(historia);
+        int sredniCzas = SredniCzas(historia);
+        WynikTreningu najdluzszy = NajdluzszyTrening(historia);
+        WynikTreningu najkrotszy = NajkrotszyTrening(historia);
+        WynikTreningu najdluzszyWTygodniu = NajdluzszyWTygodniu(historia);
+        Wykonanie najczestszy = NajczesciejWykonywanyTrening(historia);
+        List<Wykonanie> poszczegolne = PoszczegolneWykonania(historia);
+        return new Statystyki(ilosc, lacznyCzas, sredniCzas, najdluzszy, najkrotszy, najdluzszyWTygodniu, najczestszy, poszczegolne);
     }
-    public void NajdluzszyTrening(List<HistoriaTreningu> historia)
+    public WynikTreningu NajdluzszyTrening(List<HistoriaTreningu> historia)
     {
         var najdluzszy = historia.MaxBy(x => x.CzasTrwania);
-        renderer.PokazKomunikat($"Najdłuższy trening: {najdluzszy.NazwaPlanu} trwał {FormatujCzas(najdluzszy.CzasTrwania)}");
+        if(najdluzszy != null)
+        {
+            return new WynikTreningu(najdluzszy.NazwaPlanu, (int)najdluzszy.CzasTrwania, najdluzszy.DataTreningu);
+        }
+        return null;
     }
-    public void NajkrotszyTrening(List<HistoriaTreningu> historia)
+    public WynikTreningu NajkrotszyTrening(List<HistoriaTreningu> historia)
     {
         var najkrotszy = historia.MinBy(x => x.CzasTrwania);
-        renderer.PokazKomunikat($"Najkrotszy trening to: {najkrotszy.NazwaPlanu} trwał {FormatujCzas(najkrotszy.CzasTrwania)}");
+        if(najkrotszy != null)
+        {
+        return new WynikTreningu(najkrotszy.NazwaPlanu, (int)najkrotszy.CzasTrwania, najkrotszy.DataTreningu);
+        }
+        return null;
     }
     public double WszystkieSekundy(List<HistoriaTreningu> historia)
     {
         return historia.Sum(x => x.CzasTrwania);
     }
-    public string SredniCzas(List<HistoriaTreningu> historia)
+    public int SredniCzas(List<HistoriaTreningu> historia)
     {
         double czas = WszystkieSekundy(historia);
-        string sredniCzas = FormatujCzas((czas / historia.Count));
+        int sredniCzas = (int)(czas / historia.Count);
         return sredniCzas;
-        //Console.WriteLine($"Średni czas treningów {sredniCzas}");
-    
     }
-    public string LacznyCzas(List<HistoriaTreningu> historia)
+    public int LacznyCzas(List<HistoriaTreningu> historia)
     {
         double czas = WszystkieSekundy(historia);
-        string ladnyCzas = FormatujCzas(czas);
+        int ladnyCzas = (int)czas;
         return ladnyCzas;
-        //Console.WriteLine($"Łączny czas treningów {ladnyCzas}");
-
     }
-    public void NajczesciejWykonywanyTrening(List<HistoriaTreningu> historia)
+    public Wykonanie NajczesciejWykonywanyTrening(List<HistoriaTreningu> historia)
     {
-        var najczestszy = historia
+        var wynik = historia
         .GroupBy(x => x.NazwaPlanu) //Grupujemy identyczne elementy
         .OrderByDescending(g => g.Count()) //Sortujemy po liczbie wystąpień
-        .Select(g => g.Key) //Wybieramy nazwę elementu (klucz)
         .FirstOrDefault(); //Wynik
-        renderer.PokazKomunikat($"Najczęściej występujący trening to: {najczestszy}");
-
+        if(wynik != null)
+        {
+            return new Wykonanie(wynik.Key, wynik.Count());
+        }
+        return null;
     }
-    public void PoszczegolneWykonania(List<HistoriaTreningu> historia)
+    public List<Wykonanie> PoszczegolneWykonania(List<HistoriaTreningu> historia)
     {
+        List<Wykonanie> wykonanie = new List<Wykonanie>();
         var grupy = historia
         .GroupBy(x => x.NazwaPlanu)
         .OrderByDescending(g => g.Count());
-        renderer.PokazKomunikat("Poszczególne wystąpienia treningów: ");
         foreach(var grupa in grupy)
         {
-            renderer.PokazKomunikat($"{grupa.Key} -> {grupa.Count()}");
+            Wykonanie pojedyncze = new Wykonanie(grupa.Key, grupa.Count());
+            wykonanie.Add(pojedyncze);
         }
+        return wykonanie;
     }
-
-    public void NajdluzszyWTygodniu(List<HistoriaTreningu> historia)
+    public WynikTreningu NajdluzszyWTygodniu(List<HistoriaTreningu> historia)
     {
         DateTime dzisiaj = DateTime.Now;
         DateTime ostatniTydzien = dzisiaj.AddDays(-7);
         var historiaZTygodnia = historia.Where(x => x.DataTreningu >= ostatniTydzien);
         if(!historiaZTygodnia.Any())
         {
-            renderer.PokazBlad("Nie ma treningów w ostatnim tygodniu.");
-            return;
+            return null;
         }
         var najdluzszyWTygodniu = historiaZTygodnia.MaxBy(x => x.CzasTrwania);
-        renderer.PokazKomunikat($"Najdłuższy trening w ostatnim tygodniu to: {najdluzszyWTygodniu.NazwaPlanu} trwał on: {FormatujCzas(najdluzszyWTygodniu.CzasTrwania)}");
+        return new WynikTreningu(najdluzszyWTygodniu.NazwaPlanu, (int)najdluzszyWTygodniu.CzasTrwania, najdluzszyWTygodniu.DataTreningu);
     }
 }
