@@ -2,7 +2,7 @@ using System;
 
 namespace TreningApp.Models;
 
-class HistoriaTreningu
+public class HistoriaTreningu
 {
     public int IdPlanu {get; set;}
     public string NazwaPlanu {get; set;}

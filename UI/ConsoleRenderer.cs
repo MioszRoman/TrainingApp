@@ -4,7 +4,38 @@ namespace TreningApp.UI;
 
 public class ConsoleRenderer
 {
-
+    public void PokazKomunikat(string komunikat)
+    {
+        Console.WriteLine(komunikat);
+    }
+    public void PokazKomunikatBezNowejLinii(string komunikat)
+    {
+        Console.Write(komunikat);
+    }
+    public void PokazSukces(string komunikat)
+    {
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.WriteLine(komunikat);
+        Console.ResetColor();
+    }
+    public void PokazBlad(string komunikat)
+    {
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.WriteLine(komunikat);
+        Console.ResetColor();
+    }
+    public void PokazNaglowek(string tekst)
+    {
+        Console.WriteLine($"\n===== {tekst.ToUpper()} =====");
+    }
+    public void Separator()
+    {
+        Console.WriteLine(new string('-', 40));
+    }
+    public void MocnySeparator()
+    {
+        Console.WriteLine(new string('=', 40));
+    }
     public void WyswietlPlan(Plan plan)
     {
         Console.WriteLine($"ID: {plan.Id}");
@@ -58,5 +89,30 @@ public class ConsoleRenderer
         Console.WriteLine("Data treningu: " + sesja.DataTreningu);
         Console.WriteLine("Czas trwania treningu: " + sesja.CzasTrwaniaTreningu.TotalSeconds + " sekund");
         Console.WriteLine("===========================================");
+    }
+    public void WyswietlWpisHistorii(HistoriaTreningu historiaPlanu)
+    {
+        Console.WriteLine("-------------------------------------------");
+        Console.WriteLine($"ID treningu:  {historiaPlanu.IdPlanu}");
+        Console.WriteLine("Nazwa planu: " + historiaPlanu.NazwaPlanu);
+        Console.WriteLine("Data treningu: " + historiaPlanu.DataTreningu.ToString("dd.MM.yyyy HH:mm"));
+        int wszystkieSekundy = (int)historiaPlanu.CzasTrwania;
+        int minuty = wszystkieSekundy / 60;
+        int sekundy = wszystkieSekundy % 60;
+        Console.WriteLine("Czas trwania: " + minuty + " min " + sekundy.ToString("00") + "s");
+        Console.WriteLine("-------------------------------------------");
+    }
+    public void WyswietlHistorie(List<HistoriaTreningu> wpisy)
+    {
+        if(wpisy == null || wpisy.Count == 0)
+        {
+            PokazKomunikat("Brak historii treningów.");
+            return;
+        }
+        PokazNaglowek("Historia Treningów:");
+        foreach(var wpis in wpisy)
+        {
+            WyswietlWpisHistorii(wpis);
+        }
     }
 }

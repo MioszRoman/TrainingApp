@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Numerics;
 using TreningApp.Models;
 using TreningApp.UI;
 
@@ -28,8 +26,8 @@ class Program
                     DodajPlan();
                     break;
                 case "2":
-                    Console.WriteLine("Twoje treningi: ");
-                    Console.WriteLine("-------------------------------------------");
+                    renderer.PokazNaglowek("Twoje treningi");
+                    renderer.Separator();
                     foreach(var plan in planService.GetPlany())
                     {
                         renderer.WyswietlPlan(plan);
@@ -39,8 +37,8 @@ class Program
                     RozpocznijTrening();
                     break;
                 case "4":
-                    Console.WriteLine("Twoje plany z cwiczeniami: ");
-                    Console.WriteLine("===========================================");
+                    renderer.PokazNaglowek("Twoje plany z cwiczeniami: ");
+                    renderer.MocnySeparator();
                     foreach(var plan in planService.GetPlany())
                     {
                         renderer.WyswietlPlanZCwiczeniami(plan);
@@ -54,24 +52,45 @@ class Program
                     EdytujPlan();
                     break;
                 case "7":
-                    historiaService.WyswietlHistorieTreningu();
+                    var wpisy = historiaService.PobierzWszystkieWpisy();
+                    renderer.WyswietlHistorie(wpisy);
                     break;
                 case "8":
                     int idDoWyszukania = inputHelper.PobierzLiczbe("Podaj ID planu, który chcesz zobaczyć w historii: ", 1, 100, "Nie ma takiego planu w historii!");
-                    historiaService.WyswietlHistoriePlanu(idDoWyszukania);
+                    var wpisyZID = historiaService.PobierzWpisyPlanu(idDoWyszukania);
+                    if(wpisyZID.Count == 0)
+                    {
+                        renderer.PokazBlad("Nie znaleziono takiego planu!");
+                    }
+                    else
+                    {
+                        renderer.WyswietlHistorie(wpisyZID);
+                    }
                     break;
                 case "9":
                     FiltrujHistoriePoDacie();
                     break;
                 case "10":
                     int idDoUsunieciaHistorii = inputHelper.PobierzLiczbe("Podaj ID planu, który chcesz usunąć: ", 1, 100, "Nie udało się pobrać ID");
-                    historiaService.UsunWpisHistoriiPoId(idDoUsunieciaHistorii);
+                    var usuniecie = historiaService.UsunWpisHistoriiPoId(idDoUsunieciaHistorii);
+                    if(usuniecie == 0)
+                    {
+                        renderer.PokazBlad("Brak historii treningów.");
+                    }
+                    else if(usuniecie == -1)
+                    {
+                        renderer.PokazBlad("Nie usunięto żadnego planu.");
+                    }
+                    else
+                    {
+                        renderer.PokazSukces($"Pomyślnie usunięto {usuniecie} wpisów.");
+                    }
                     break;
                 case "11":
                     treningService.WyswietlStatystyki();
                     break;
                 case "12":
-                    Console.WriteLine("Zamykam aplikację...");
+                    renderer.PokazKomunikat("Zamykam aplikację...");
                     isRunning = false;
                     break;
                 default:
@@ -79,28 +98,28 @@ class Program
                     {
                     break;
                     }
-                    Console.WriteLine("Błędna opcja. Spróbuj ponownie.");
+                    renderer.PokazBlad("Błędna opcja. Spróbuj ponownie.");
                     break;
             }
         }
     }
     static void ShowMenu()
     {
-        Console.WriteLine("===========================================");
-        Console.WriteLine("Witam, w mojej aplikacji treningowej.");
-        Console.WriteLine("1. Dodaj trening");
-        Console.WriteLine("2. Wyświetl treningi");
-        Console.WriteLine("3. Zacznij trening");
-        Console.WriteLine("4. Wyświetl treningi z ćwiczeniami");
-        Console.WriteLine("5. Usuń plan po ID.");
-        Console.WriteLine("6. Edytuj plan");
-        Console.WriteLine("7. Wyswietl historie treningow");
-        Console.WriteLine("8. Wyświetl plan po id");
-        Console.WriteLine("9. Wyświetl historie z konkretnego przedziału.");
-        Console.WriteLine("10. Usuń wpis z historii");
-        Console.WriteLine("11. Statystyki");
-        Console.WriteLine("12. Zamknij aplikację");
-        Console.WriteLine("===========================================");
+        renderer.MocnySeparator();
+        renderer.PokazKomunikat("Witam, w mojej aplikacji treningowej.");
+        renderer.PokazKomunikat("1. Dodaj trening");
+        renderer.PokazKomunikat("2. Wyświetl treningi");
+        renderer.PokazKomunikat("3. Zacznij trening");
+        renderer.PokazKomunikat("4. Wyświetl treningi z ćwiczeniami");
+        renderer.PokazKomunikat("5. Usuń plan po ID.");
+        renderer.PokazKomunikat("6. Edytuj plan");
+        renderer.PokazKomunikat("7. Wyswietl historie treningow");
+        renderer.PokazKomunikat("8. Wyświetl plan po id");
+        renderer.PokazKomunikat("9. Wyświetl historie z konkretnego przedziału.");
+        renderer.PokazKomunikat("10. Usuń wpis z historii");
+        renderer.PokazKomunikat("11. Statystyki");
+        renderer.PokazKomunikat("12. Zamknij aplikację");
+        renderer.MocnySeparator();
     }
     static void DodajPlan()
     {
@@ -127,13 +146,13 @@ class Program
         int przerwaO = inputHelper.PobierzPrzerweMiedzyObwodami(iloscObwodow);
         if(przerwaO == -1)
         {
-            Console.WriteLine("Nie udało się pobrać przerwy miedzy obwodami!\nUpewnij się że podałeś odpowieną długość przerwy!");
+            renderer.PokazBlad("Nie udało się pobrać przerwy miedzy obwodami!\nUpewnij się że podałeś odpowieną długość przerwy!");
             return;
         }
         List<Cwiczenie> listaCwiczen = inputHelper.PobierzCwiczenia();
         if(listaCwiczen == null)
         {
-            Console.WriteLine("Nie udało się pobrać listy cwiczen!\nTworzenie planu zostało przerwane.");
+            renderer.PokazBlad("Nie udało się pobrać listy cwiczen!\nTworzenie planu zostało przerwane.");
             return;
         }
         planService.DodajPlan(nazwaPlanu, poziom, rodzajTreningu, iloscObwodow, przerwaO, listaCwiczen);
@@ -151,31 +170,39 @@ class Program
             treningService.WykonajTreningZWynikiem(aktualnyPlan);
         }else
         {
-            Console.WriteLine("Nie znaleziono treningu o podanym id. Upewnij się, że podałeś poprawne ID.");
+            renderer.PokazBlad("Nie znaleziono treningu o podanym id. Upewnij się, że podałeś poprawne ID.");
         }
     }
     static void FiltrujHistoriePoDacie()
     {
-        Console.Write("Podaj datę OD (dd.MM.yyy): ");
+        renderer.PokazKomunikatBezNowejLinii("Podaj datę OD (dd.MM.yyyy): ");
         string odInput = Console.ReadLine();
         if(!DateTime.TryParse(odInput, out DateTime od))
         {
-            Console.WriteLine("Nie podano poprawnej daty!");
+            renderer.PokazBlad("Nie podano poprawnej daty!");
             return;
         }
-        Console.Write("Podaj datę Do (dd.MM.yyy): ");
+        renderer.PokazKomunikatBezNowejLinii("Podaj datę Do (dd.MM.yyyy): ");
         string doInput = Console.ReadLine();
         if(!DateTime.TryParse(doInput, out DateTime doKiedy))
         {
-            Console.WriteLine("Nie podano poprawnej daty!");
+            renderer.PokazBlad("Nie podano poprawnej daty!");
             return;
         }
         if(od > doKiedy)
         {
-            Console.WriteLine("Prawdopodobnie podałeś datę odwrotnie. Upewnij się że są one poprawne!");
+            renderer.PokazBlad("Prawdopodobnie podałeś datę odwrotnie. Upewnij się że są one poprawne!");
             return;
         }
-        historiaService.WyswietlHistorieZData(od, doKiedy);
+        var wpisyDat = historiaService.PobierzWpisyZDat(od, doKiedy);
+        if(wpisyDat.Count == 0)
+        {
+            renderer.PokazBlad("Nie znaleziono historii w podanym zakresie.");
+        }
+        else
+        {
+            renderer.WyswietlHistorie(wpisyDat);
+        }
     }
     static void EdytujPlan()
     {
@@ -187,7 +214,7 @@ class Program
             Plan planDoEdycji = planService.ZnajdzPlanPoId(idDoEdycji);
             if(planDoEdycji == null)
             {
-                Console.WriteLine("Nie ma takiego planu!");
+                renderer.PokazBlad("Nie ma takiego planu!");
                 return;
             }
             string nowaNazwa = inputHelper.PobierzTekst("Podaj nową nazwę: ", "Upewnij się, że podałeś odpowiedni tekst");
