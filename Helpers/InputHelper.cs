@@ -38,6 +38,45 @@ class InputHelper
         }
         return text;
     }
+    public string PobierzTekstDoEdycji(string komunikat)
+    {
+        Console.Write(komunikat);
+        string text = Console.ReadLine();
+        if(string.IsNullOrWhiteSpace(text))
+        {
+            return "";
+        }
+        return text;
+    }
+    public int? PobierzLiczbeDoEdycji(string komunikat, int liczbaMin, int liczbaMax, string blad)
+    {
+        do
+        {
+            Console.Write(komunikat);
+            string text = Console.ReadLine();
+            if(string.IsNullOrWhiteSpace(text))
+            {
+                return null;
+            }
+            bool czyLiczba = int.TryParse(text, out int liczba);
+            if(!czyLiczba)
+            {
+                Console.WriteLine(blad);
+                continue;
+            }
+            if(liczba < liczbaMin)
+            {
+                Console.WriteLine(blad);
+                continue;
+            }
+            if(liczba > liczbaMax)
+            {
+                Console.WriteLine(blad);
+                continue;
+            }
+            return liczba;
+        }while(true);
+    }
     public int PobierzIloscObwodow(int liczbaMin)
     {
         return PobierzLiczbe("Podaj ilość obwodów: ", liczbaMin, 20, "Upewnij się, że podałeś liczbę większą od zera!");

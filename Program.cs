@@ -228,32 +228,37 @@ class Program
                 renderer.PokazBlad("Nie ma takiego planu!");
                 return;
             }
-            string nowaNazwa = inputHelper.PobierzTekst("Podaj nową nazwę: ", "Upewnij się, że podałeś odpowiedni tekst");
-            if(nowaNazwa == null)
+            else
             {
-                return;
+                renderer.PokazNaglowek("Edytowany plan");
+                renderer.WyswietlPlan(planDoEdycji);
             }
-            int nowyPoziom = inputHelper.PobierzLiczbe("Podaj nowy poziom (1, 10): ", 1, 10, "Upewnij się że podałeś liczbę w odpowienim przedziale!");
-            if(nowyPoziom == -1)
+            string nowaNazwa = inputHelper.PobierzTekstDoEdycji("Podaj nową nazwę (Enter = bez zmian): ");
+            if(string.IsNullOrWhiteSpace(nowaNazwa))
             {
-                return;
+                nowaNazwa = planDoEdycji.Nazwa;
             }
-            string nowyRodzaj = inputHelper.PobierzTekst("Podaj nowy rodzaj: ", "Upewnij się że podałeś dobrą nazwę");
-            if(nowyRodzaj == null)
+            int? nowyPoziom = inputHelper.PobierzLiczbeDoEdycji("Podaj nowy poziom (1, 10) (Enter = bez zmian): ", 1, 10, "Upewnij się że podałeś liczbę w odpowienim przedziale!");
+            if(nowyPoziom == null)
             {
-                return;
+                nowyPoziom = planDoEdycji.Poziom;
             }
-            int nowaIloscObwodow = inputHelper.PobierzLiczbe("Podaj nowa ilosc obwodow: ", 0, 50, "Upewnij się że podałeś liczbę.");
-            if(nowaIloscObwodow == -1)
+            string nowyRodzaj = inputHelper.PobierzTekstDoEdycji("Podaj nowy rodzaj (Enter = bez zmian): ");
+            if(string.IsNullOrWhiteSpace(nowyRodzaj))
             {
-                return;
+                nowyRodzaj = planDoEdycji.Rodzaj;
             }
-            int nowaPrzerwaMiedzyObwodami = inputHelper.PobierzLiczbe("Podaj nową długość przerwy: ", 0, 1000, "Upewnij się że podałeś liczbę.");
-            if(nowaPrzerwaMiedzyObwodami == -1)
+            int? nowaIloscObwodow = inputHelper.PobierzLiczbeDoEdycji("Podaj nowa ilosc obwodow (Enter = bez zmian): ", 0, 50, "Upewnij się że podałeś liczbę.");
+            if(nowaIloscObwodow == null)
             {
-                return;
+                nowaIloscObwodow = planDoEdycji.IloscObwodow;
             }
-            planService.EdytujPlanPoId(planDoEdycji, nowaNazwa, nowyPoziom, nowyRodzaj, nowaIloscObwodow, nowaPrzerwaMiedzyObwodami);
+            int? nowaPrzerwaMiedzyObwodami = inputHelper.PobierzLiczbeDoEdycji("Podaj nową długość przerwy (Enter = bez zmian): ", 0, 1000, "Upewnij się że podałeś liczbę.");
+            if(nowaPrzerwaMiedzyObwodami == null)
+            {
+                nowaPrzerwaMiedzyObwodami = planDoEdycji.PrzerwaMiedzyObwodami;
+            }
+            planService.EdytujPlanPoId(planDoEdycji, nowaNazwa, nowyPoziom.Value, nowyRodzaj, nowaIloscObwodow.Value, nowaPrzerwaMiedzyObwodami.Value);
         
     }
 }
