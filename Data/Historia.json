@@ -2,31 +2,7 @@
   {
     "IdPlanu": 2,
     "NazwaPlanu": "Dwojka",
-    "DataTreningu": "2026-04-08T12:51:40.3474578+02:00",
-    "CzasTrwania": 138.58
-  },
-  {
-    "IdPlanu": 2,
-    "NazwaPlanu": "Dwojka",
-    "DataTreningu": "2026-04-09T08:51:40.3474578+02:00",
-    "CzasTrwania": 600.58
-  },
-  {
-    "IdPlanu": 4,
-    "NazwaPlanu": "Czw\u00F3rka",
-    "DataTreningu": "2026-04-09T10:51:40.3474578+02:00",
-    "CzasTrwania": 1244.58
-  },
-  {
-    "IdPlanu": 2,
-    "NazwaPlanu": "Dwojka",
-    "DataTreningu": "2026-04-11T22:34:22.99449+02:00",
-    "CzasTrwania": 20.4267494
-  },
-  {
-    "IdPlanu": 2,
-    "NazwaPlanu": "Dwojka",
-    "DataTreningu": "2026-04-11T22:36:47.644034+02:00",
-    "CzasTrwania": 19.1540457
+    "DataTreningu": "2026-04-14T18:49:31.0186337+02:00",
+    "CzasTrwania": 18.6678823
   }
 ]

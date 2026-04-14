@@ -22,28 +22,6 @@
     ]
   },
   {
-    "Nazwa": "Trojka",
-    "Poziom": 10,
-    "Rodzaj": "Cardio",
-    "IloscObwodow": 2,
-    "Id": 3,
-    "PrzerwaMiedzyObwodami": 60,
-    "Cwiczenia": [
-      {
-        "NazwaCwiczenia": "Sprint",
-        "LiczbaSerii": 5,
-        "LiczbaPowtorzen": 80,
-        "PrzerwaMiedzySeriami": 120
-      },
-      {
-        "NazwaCwiczenia": "Trucht",
-        "LiczbaSerii": 5,
-        "LiczbaPowtorzen": 100,
-        "PrzerwaMiedzySeriami": 120
-      }
-    ]
-  },
-  {
     "Nazwa": "JedynkaE",
     "Poziom": 9,
     "Rodzaj": "Silowy",
@@ -62,6 +40,80 @@
         "LiczbaSerii": 3,
         "LiczbaPowtorzen": 15,
         "PrzerwaMiedzySeriami": 45
+      }
+    ]
+  },
+  {
+    "Nazwa": "NowaNazwa",
+    "Poziom": 2,
+    "Rodzaj": "Si\u0000owy",
+    "IloscObwodow": 2,
+    "Id": 5,
+    "PrzerwaMiedzyObwodami": 60,
+    "Cwiczenia": [
+      {
+        "NazwaCwiczenia": "2",
+        "LiczbaSerii": 2,
+        "LiczbaPowtorzen": 2,
+        "PrzerwaMiedzySeriami": 2
+      },
+      {
+        "NazwaCwiczenia": "2",
+        "LiczbaSerii": 2,
+        "LiczbaPowtorzen": 2,
+        "PrzerwaMiedzySeriami": 2
+      }
+    ]
+  },
+  {
+    "Nazwa": "FBW 1",
+    "Poziom": 1,
+    "Rodzaj": "Si\u0000owy",
+    "IloscObwodow": 8,
+    "Id": 6,
+    "PrzerwaMiedzyObwodami": 90,
+    "Cwiczenia": [
+      {
+        "NazwaCwiczenia": "Pompki na kolanach",
+        "LiczbaSerii": 1,
+        "LiczbaPowtorzen": 3,
+        "PrzerwaMiedzySeriami": 30
+      },
+      {
+        "NazwaCwiczenia": "Pajacyki",
+        "LiczbaSerii": 1,
+        "LiczbaPowtorzen": 20,
+        "PrzerwaMiedzySeriami": 30
+      },
+      {
+        "NazwaCwiczenia": "Podp\u0000r przodem",
+        "LiczbaSerii": 1,
+        "LiczbaPowtorzen": 30,
+        "PrzerwaMiedzySeriami": 30
+      },
+      {
+        "NazwaCwiczenia": "Przysiady",
+        "LiczbaSerii": 1,
+        "LiczbaPowtorzen": 10,
+        "PrzerwaMiedzySeriami": 45
+      },
+      {
+        "NazwaCwiczenia": "Uginanie ramion",
+        "LiczbaSerii": 1,
+        "LiczbaPowtorzen": 10,
+        "PrzerwaMiedzySeriami": 30
+      },
+      {
+        "NazwaCwiczenia": "Wyrzuty n\u0000g w podporze",
+        "LiczbaSerii": 1,
+        "LiczbaPowtorzen": 15,
+        "PrzerwaMiedzySeriami": 30
+      },
+      {
+        "NazwaCwiczenia": "Plank",
+        "LiczbaSerii": 1,
+        "LiczbaPowtorzen": 30,
+        "PrzerwaMiedzySeriami": 0
       }
     ]
   }

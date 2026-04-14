@@ -77,7 +77,7 @@ class PlanService
         ZapisPlanow();
         Console.WriteLine("Trening został dodany pomyślnie, jego ID to: " + noweId);
     }
-    public Plan ZnajdzPlanPoId(int id)
+    public Plan? ZnajdzPlanPoId(int id)
     {
         foreach(var plan in plany)
         {
@@ -90,7 +90,7 @@ class PlanService
     }
     public void UsunPlanPoId(int id)
     {
-        Plan planDoUsuniecia = ZnajdzPlanPoId(id);
+        Plan? planDoUsuniecia = ZnajdzPlanPoId(id);
         if(planDoUsuniecia == null)
         {
             Console.WriteLine("Nie ma planu o takim ID!");

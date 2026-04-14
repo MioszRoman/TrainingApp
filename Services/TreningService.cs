@@ -15,9 +15,7 @@ class TreningService
     private List<SesjaTreningowa> listaTreningow = new List<SesjaTreningowa>();
     private List<SesjaObwodu> listaObwodow = new List<SesjaObwodu>();
     private List<SesjaSerii> listaSerii = new List<SesjaSerii>();
-    private List<HistoriaTreningu> historia = new List<HistoriaTreningu>();
     private ConsoleRenderer renderer = new ConsoleRenderer();
-    private HistoriaService historiaService = new HistoriaService();
     private string sciezkaHistorii = Path.Combine("Data", "Historia.json");
 
     private JsonSerializerOptions JsonOptions()
@@ -26,102 +24,6 @@ class TreningService
         options.TypeInfoResolver = new DefaultJsonTypeInfoResolver();
         options.WriteIndented = true;
         return options;
-    }
-    
-    public string WyswietlenieCzasu(double calyCzas)
-    {
-        int wszystkieSekundy = (int)calyCzas;
-        int minuty = wszystkieSekundy / 60;
-        int sekundy = wszystkieSekundy % 60;
-        string komunikat = $"{minuty} min {sekundy} s";
-        return komunikat;
-    }
-    public void WyswietlStatystyki()
-    {
-        //Ilość treningów 
-        if(historia.Count == 0)
-        {
-            Console.WriteLine("Brak historii treningów.");
-            return;
-        }
-        Console.WriteLine($"Ilość treningów: {historia.Count}");
-        LacznyCzas();
-        SredniCzas();
-        NajczesciejWykonywanyTrening();
-        PoszczegolneWykonania();
-        NajdluzszyTrening();
-        NajkrotszyTrening();
-        NajdluzszyWTygodniu();        
-    }
-    public void NajdluzszyTrening()
-    {
-        var najdluzszy = historia
-        .OrderByDescending(x => x.CzasTrwania)
-        .First();
-        Console.WriteLine($"Najdłuższy trening: {najdluzszy.NazwaPlanu} trwał {WyswietlenieCzasu(najdluzszy.CzasTrwania)}");
-    }
-    public void NajkrotszyTrening()
-    {
-        var najkrotszy = historia.MinBy(x => x.CzasTrwania);
-        Console.WriteLine($"Najkrotszy trening to: {najkrotszy.NazwaPlanu} trwał {WyswietlenieCzasu(najkrotszy.CzasTrwania)}");
-    }
-    public double WszystkieSekundy()
-    {
-        double lacznyCzas = 0;
-        foreach(var czas in historia)
-        {
-            lacznyCzas += czas.CzasTrwania;
-        }
-        return lacznyCzas;
-    }
-    public void SredniCzas()
-    {
-        double czas = WszystkieSekundy();
-        string sredniCzas = WyswietlenieCzasu((czas / historia.Count));    
-        Console.WriteLine($"Średni czas treningów {sredniCzas}");
-    
-    }
-    public void LacznyCzas()
-    {
-        double czas = WszystkieSekundy();
-        string ladnyCzas = WyswietlenieCzasu(czas);
-        Console.WriteLine($"Łączny czas treningów {ladnyCzas}");
-
-    }
-    public void NajczesciejWykonywanyTrening()
-    {
-        var najczestszy = historia
-        .GroupBy(x => x.NazwaPlanu) //Grupujemy identyczne elementy
-        .OrderByDescending(g => g.Count()) //Sortujemy po liczbie wystąpień
-        .Select(g => g.Key) //Wybieramy nazwę elementu (klucz)
-        .FirstOrDefault(); //Wynik
-        Console.WriteLine($"Najczęściej występujący trening to: {najczestszy}");
-
-    }
-    public void PoszczegolneWykonania()
-    {
-        var grupy = historia
-        .GroupBy(x => x.NazwaPlanu)
-        .OrderByDescending(g => g.Count());
-        Console.WriteLine("Poszczególne wystąpienia treningów: ");
-        foreach(var grupa in grupy)
-        {
-            Console.WriteLine($"{grupa.Key} -> {grupa.Count()}");
-        }
-    }
-
-    public void NajdluzszyWTygodniu()
-    {
-        DateTime dzisiaj = DateTime.Now;
-        DateTime ostatniTydzien = dzisiaj.AddDays(-7);
-        var historiaZTygodnia = historia.Where(x => x.DataTreningu >= ostatniTydzien);
-        if(historiaZTygodnia.Count() == 0)
-        {
-            Console.WriteLine("Nie ma treningów w ostanim tygodniu.");
-            return;
-        }
-        var najdluzszyWTygodniu = historiaZTygodnia.MaxBy(x => x.CzasTrwania);
-        Console.WriteLine($"Najdłuższy trening w ostatnim tygodniu to: {najdluzszyWTygodniu.NazwaPlanu} trwał on: {WyswietlenieCzasu(najdluzszyWTygodniu.CzasTrwania)}");
     }
     public void WyswietlPodsumowanieAktualnegoTreningu()
     {
@@ -193,7 +95,7 @@ class TreningService
             }
         }
     }
-    public void WykonajTreningZWynikiem(Plan planDoZaczecia)
+    public void WykonajTreningZWynikiem(Plan planDoZaczecia, HistoriaService historiaService)
     {
         listaTreningow.Clear();
         listaObwodow.Clear();
@@ -206,8 +108,7 @@ class TreningService
         TimeSpan czasTrwaniaTreningu = stopTreningu - startTreningu;
         listaTreningow.Add(new SesjaTreningowa(planDoZaczecia, startTreningu, czasTrwaniaTreningu));
         WyswietlPodsumowanieAktualnegoTreningu();
-        historia.Add(new HistoriaTreningu(planDoZaczecia.Id, planDoZaczecia.Nazwa, startTreningu, czasTrwaniaTreningu.TotalSeconds));
-        historiaService.ZapisHistorii();
+        historiaService.ZapiszHistorie(planDoZaczecia, startTreningu, czasTrwaniaTreningu);
 
     }
 }

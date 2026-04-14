@@ -90,7 +90,7 @@ class Program
                     break;
                 case "11":
                     var wpisyDoStatystyk = historiaService.PobierzWszystkieWpisy();
-                    Statystyki statystyki = statystykiService.PobierzStatystyki(wpisyDoStatystyk);
+                    Statystyki? statystyki = statystykiService.PobierzStatystyki(wpisyDoStatystyk);
                     if(statystyki == null)
                     {
                         renderer.PokazKomunikat("Brak statystyk");
@@ -160,7 +160,7 @@ class Program
             renderer.PokazBlad("Nie udało się pobrać przerwy miedzy obwodami!\nUpewnij się że podałeś odpowieną długość przerwy!");
             return;
         }
-        List<Cwiczenie> listaCwiczen = inputHelper.PobierzCwiczenia();
+        List<Cwiczenie>? listaCwiczen = inputHelper.PobierzCwiczenia();
         if(listaCwiczen == null)
         {
             renderer.PokazBlad("Nie udało się pobrać listy cwiczen!\nTworzenie planu zostało przerwane.");
@@ -175,10 +175,10 @@ class Program
         {
             return; // Jeśli ID jest nieprawidłowe, zakończ funkcję i wróć do menu
         }
-        Plan aktualnyPlan = planService.ZnajdzPlanPoId(id);
+        Plan? aktualnyPlan = planService.ZnajdzPlanPoId(id);
         if(aktualnyPlan != null)
         {
-            treningService.WykonajTreningZWynikiem(aktualnyPlan);
+            treningService.WykonajTreningZWynikiem(aktualnyPlan, historiaService);
         }else
         {
             renderer.PokazBlad("Nie znaleziono treningu o podanym id. Upewnij się, że podałeś poprawne ID.");
@@ -187,14 +187,14 @@ class Program
     static void FiltrujHistoriePoDacie()
     {
         renderer.PokazKomunikatBezNowejLinii("Podaj datę OD (dd.MM.yyyy): ");
-        string odInput = Console.ReadLine();
+        string? odInput = Console.ReadLine();
         if(!DateTime.TryParse(odInput, out DateTime od))
         {
             renderer.PokazBlad("Nie podano poprawnej daty!");
             return;
         }
         renderer.PokazKomunikatBezNowejLinii("Podaj datę Do (dd.MM.yyyy): ");
-        string doInput = Console.ReadLine();
+        string? doInput = Console.ReadLine();
         if(!DateTime.TryParse(doInput, out DateTime doKiedy))
         {
             renderer.PokazBlad("Nie podano poprawnej daty!");
@@ -222,7 +222,7 @@ class Program
         {   
             return;
         }
-        Plan planDoEdycji = planService.ZnajdzPlanPoId(idDoEdycji);
+        Plan? planDoEdycji = planService.ZnajdzPlanPoId(idDoEdycji);
         if(planDoEdycji == null)
         {
             renderer.PokazBlad("Nie ma takiego planu!");
@@ -262,7 +262,7 @@ class Program
         List<Cwiczenie> cwiczeniaDoDodania = planDoEdycji.Cwiczenia;        
         if(decyzja)
         {
-        List<Cwiczenie> listaCwiczenDoDodania = inputHelper.PobierzCwiczenia();
+        List<Cwiczenie>? listaCwiczenDoDodania = inputHelper.PobierzCwiczenia();
         if(listaCwiczenDoDodania == null)
         {
             renderer.PokazBlad("Nie udało się pobrać listy cwiczen!\nZostawiono bez zmian");

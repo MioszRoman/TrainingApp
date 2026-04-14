@@ -60,6 +60,11 @@ class HistoriaService
         .OrderByDescending(h => h.DataTreningu)
         .ToList();
     }
+    public void ZapiszHistorie(Plan planDoZaczecia, DateTime startTreningu, TimeSpan czasTrwaniaTreningu)
+    {
+        historia.Add(new HistoriaTreningu(planDoZaczecia.Id, planDoZaczecia.Nazwa, startTreningu, czasTrwaniaTreningu.TotalSeconds));
+        ZapisHistorii();
+    }
     public int UsunWpisHistoriiPoId(int id)
     {
         if(historia.Count == 0)
