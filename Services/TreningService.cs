@@ -16,15 +16,6 @@ class TreningService
     private List<SesjaObwodu> listaObwodow = new List<SesjaObwodu>();
     private List<SesjaSerii> listaSerii = new List<SesjaSerii>();
     private ConsoleRenderer renderer = new ConsoleRenderer();
-    private string sciezkaHistorii = Path.Combine("Data", "Historia.json");
-
-    private JsonSerializerOptions JsonOptions()
-    {
-        var options = new JsonSerializerOptions();
-        options.TypeInfoResolver = new DefaultJsonTypeInfoResolver();
-        options.WriteIndented = true;
-        return options;
-    }
     public void WyswietlPodsumowanieAktualnegoTreningu()
     {
         Console.WriteLine("Podsumowanie treningu: ");
