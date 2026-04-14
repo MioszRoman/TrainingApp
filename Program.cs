@@ -218,47 +218,61 @@ class Program
     static void EdytujPlan()
     {
         int idDoEdycji = inputHelper.PobierzLiczbe("Podaj ID treningu do edycji: ", 1, 100, "Nie udało się znaleźć planu o takim ID.");
-            if(idDoEdycji == -1)
-            {   
-                return;
-            }
-            Plan planDoEdycji = planService.ZnajdzPlanPoId(idDoEdycji);
-            if(planDoEdycji == null)
-            {
-                renderer.PokazBlad("Nie ma takiego planu!");
-                return;
-            }
+        if(idDoEdycji == -1)
+        {   
+            return;
+        }
+        Plan planDoEdycji = planService.ZnajdzPlanPoId(idDoEdycji);
+        if(planDoEdycji == null)
+        {
+            renderer.PokazBlad("Nie ma takiego planu!");
+            return;
+        }
+        else
+        {
+            renderer.PokazNaglowek("Edytowany plan");
+            renderer.WyswietlPlan(planDoEdycji);
+        }
+        string nowaNazwa = inputHelper.PobierzTekstDoEdycji("Podaj nową nazwę (Enter = bez zmian): ");
+        if(string.IsNullOrWhiteSpace(nowaNazwa))
+        {
+            nowaNazwa = planDoEdycji.Nazwa;
+        }
+        int? nowyPoziom = inputHelper.PobierzLiczbeDoEdycji("Podaj nowy poziom (1, 10) (Enter = bez zmian): ", 1, 10, "Upewnij się że podałeś liczbę w odpowienim przedziale!");
+        if(nowyPoziom == null)
+        {
+            nowyPoziom = planDoEdycji.Poziom;
+        }
+        string nowyRodzaj = inputHelper.PobierzTekstDoEdycji("Podaj nowy rodzaj (Enter = bez zmian): ");
+        if(string.IsNullOrWhiteSpace(nowyRodzaj))
+        {
+            nowyRodzaj = planDoEdycji.Rodzaj;
+        }
+        int? nowaIloscObwodow = inputHelper.PobierzLiczbeDoEdycji("Podaj nowa ilosc obwodow (Enter = bez zmian): ", 0, 50, "Upewnij się że podałeś liczbę.");
+        if(nowaIloscObwodow == null)
+        {
+            nowaIloscObwodow = planDoEdycji.IloscObwodow;
+        }
+        int? nowaPrzerwaMiedzyObwodami = inputHelper.PobierzLiczbeDoEdycji("Podaj nową długość przerwy (Enter = bez zmian): ", 0, 1000, "Upewnij się że podałeś liczbę.");
+        if(nowaPrzerwaMiedzyObwodami == null)
+        {
+            nowaPrzerwaMiedzyObwodami = planDoEdycji.PrzerwaMiedzyObwodami;
+        }
+        bool decyzja = inputHelper.Decyzja("Czy chcesz edytować ćwiczenia? (t/n): ", "Podałeś coś innego. Spróbuj ponownie!");
+        List<Cwiczenie> cwiczeniaDoDodania = planDoEdycji.Cwiczenia;        
+        if(decyzja)
+        {
+        List<Cwiczenie> listaCwiczenDoDodania = inputHelper.PobierzCwiczenia();
+        if(listaCwiczenDoDodania == null)
+        {
+            renderer.PokazBlad("Nie udało się pobrać listy cwiczen!\nZostawiono bez zmian");
+        }
             else
             {
-                renderer.PokazNaglowek("Edytowany plan");
-                renderer.WyswietlPlan(planDoEdycji);
+                cwiczeniaDoDodania = listaCwiczenDoDodania;
             }
-            string nowaNazwa = inputHelper.PobierzTekstDoEdycji("Podaj nową nazwę (Enter = bez zmian): ");
-            if(string.IsNullOrWhiteSpace(nowaNazwa))
-            {
-                nowaNazwa = planDoEdycji.Nazwa;
-            }
-            int? nowyPoziom = inputHelper.PobierzLiczbeDoEdycji("Podaj nowy poziom (1, 10) (Enter = bez zmian): ", 1, 10, "Upewnij się że podałeś liczbę w odpowienim przedziale!");
-            if(nowyPoziom == null)
-            {
-                nowyPoziom = planDoEdycji.Poziom;
-            }
-            string nowyRodzaj = inputHelper.PobierzTekstDoEdycji("Podaj nowy rodzaj (Enter = bez zmian): ");
-            if(string.IsNullOrWhiteSpace(nowyRodzaj))
-            {
-                nowyRodzaj = planDoEdycji.Rodzaj;
-            }
-            int? nowaIloscObwodow = inputHelper.PobierzLiczbeDoEdycji("Podaj nowa ilosc obwodow (Enter = bez zmian): ", 0, 50, "Upewnij się że podałeś liczbę.");
-            if(nowaIloscObwodow == null)
-            {
-                nowaIloscObwodow = planDoEdycji.IloscObwodow;
-            }
-            int? nowaPrzerwaMiedzyObwodami = inputHelper.PobierzLiczbeDoEdycji("Podaj nową długość przerwy (Enter = bez zmian): ", 0, 1000, "Upewnij się że podałeś liczbę.");
-            if(nowaPrzerwaMiedzyObwodami == null)
-            {
-                nowaPrzerwaMiedzyObwodami = planDoEdycji.PrzerwaMiedzyObwodami;
-            }
-            planService.EdytujPlanPoId(planDoEdycji, nowaNazwa, nowyPoziom.Value, nowyRodzaj, nowaIloscObwodow.Value, nowaPrzerwaMiedzyObwodami.Value);
-        
+        }
+        planService.EdytujPlanPoId(planDoEdycji, nowaNazwa, nowyPoziom.Value, nowyRodzaj, nowaIloscObwodow.Value, nowaPrzerwaMiedzyObwodami.Value, cwiczeniaDoDodania);
+    
     }
 }

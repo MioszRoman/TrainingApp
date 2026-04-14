@@ -101,13 +101,14 @@ class PlanService
         Console.WriteLine("Pomyślnie usunięto plan!");
         ZapisPlanow();
     }
-    public void EdytujPlanPoId(Plan planDoEdycji, string nazwa, int poziom, string rodzaj, int iloscObwodow, int przerwaO)
+    public void EdytujPlanPoId(Plan planDoEdycji, string nazwa, int poziom, string rodzaj, int iloscObwodow, int przerwaO, List<Cwiczenie> noweCwiczenia)
     {
         planDoEdycji.Nazwa = nazwa;
         planDoEdycji.Poziom = poziom;
         planDoEdycji.Rodzaj = rodzaj;
         planDoEdycji.IloscObwodow = iloscObwodow;
         planDoEdycji.PrzerwaMiedzyObwodami = przerwaO;
+        planDoEdycji.Cwiczenia = noweCwiczenia;
         ZapisPlanow();
 
     }
