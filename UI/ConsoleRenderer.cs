@@ -1,3 +1,4 @@
+using System.Runtime.Serialization;
 using TreningApp.Models;
 
 namespace TreningApp.UI;
@@ -90,17 +91,23 @@ public class ConsoleRenderer
         Console.WriteLine("Czas trwania treningu: " + sesja.CzasTrwaniaTreningu.TotalSeconds + " sekund");
         Console.WriteLine("===========================================");
     }
+    public string FormatujCzas(double calyCzas)
+    {
+        int wszystkieSekundy = (int)calyCzas;
+        int minuty = wszystkieSekundy / 60;
+        int sekundy = wszystkieSekundy % 60;
+        string komunikat = $"{minuty} min {sekundy} s";
+        return komunikat;
+    }
     public void WyswietlWpisHistorii(HistoriaTreningu historiaPlanu)
     {
-        Console.WriteLine("-------------------------------------------");
+        Separator();
         Console.WriteLine($"ID treningu:  {historiaPlanu.IdPlanu}");
         Console.WriteLine("Nazwa planu: " + historiaPlanu.NazwaPlanu);
         Console.WriteLine("Data treningu: " + historiaPlanu.DataTreningu.ToString("dd.MM.yyyy HH:mm"));
-        int wszystkieSekundy = (int)historiaPlanu.CzasTrwania;
-        int minuty = wszystkieSekundy / 60;
-        int sekundy = wszystkieSekundy % 60;
-        Console.WriteLine("Czas trwania: " + minuty + " min " + sekundy.ToString("00") + "s");
-        Console.WriteLine("-------------------------------------------");
+        string komunikat = FormatujCzas(historiaPlanu.CzasTrwania);
+        Console.WriteLine($"Czas trwania: {komunikat}");
+        Separator();
     }
     public void WyswietlHistorie(List<HistoriaTreningu> wpisy)
     {
@@ -113,6 +120,72 @@ public class ConsoleRenderer
         foreach(var wpis in wpisy)
         {
             WyswietlWpisHistorii(wpis);
+        }
+    }
+    public void WyswietlWynikTreningu(WynikTreningu wynik)
+    {
+        PokazKomunikat($"Nazwa treningu: {wynik.Nazwa}");
+        PokazKomunikat($"Trwał: {FormatujCzas(wynik.Czas)}");
+        PokazKomunikat($"Odbył się: {wynik.Data.Date}");
+    }
+    public void WyswietlWykonanie(Wykonanie wykonania)
+    {
+        PokazKomunikat($"Nazwa: {wykonania.Nazwa}");
+        PokazKomunikat($"Odbył się: {wykonania.Ilosc} razy");
+    }
+    public void WyswietlStatystyki(Statystyki statystyki)
+    {
+        PokazNaglowek("Statystyki");
+        PokazKomunikat($"Ilość treningów: {statystyki.IloscTreningow}");
+        Separator();
+        PokazKomunikat($"Łączny czas treningow: {FormatujCzas(statystyki.LacznyCzas)}");
+        Separator();
+        PokazKomunikat($"Średni czas treningów: {FormatujCzas(statystyki.SredniCzas)}");
+        Separator();
+        PokazKomunikat("Najdłuższy trening to:");
+        if(statystyki.NajdluzszyTrening == null)
+        {
+            PokazKomunikat("Brak informacji.");
+        }
+        else
+        {
+            WyswietlWynikTreningu(statystyki.NajdluzszyTrening);
+        }
+        Separator();
+        PokazKomunikat("Najkrótszy trening to:");
+        if(statystyki.NajkrotszyTrening == null)
+        {
+            PokazKomunikat("Brak informacji.");
+        }
+        else
+        {
+            WyswietlWynikTreningu(statystyki.NajkrotszyTrening);
+        }
+        Separator();
+        PokazKomunikat("Najdłuższy trening w tym tygodniu to:");
+        if(statystyki.NajdluzszyTreningWTygodniu == null)
+        {
+            PokazKomunikat("Brak treningów w ostatnim tygodniu");
+        }
+        else
+        {
+        WyswietlWynikTreningu(statystyki.NajdluzszyTreningWTygodniu);
+        }
+        Separator();
+        PokazKomunikat("Najczęstszym treningiem był:");
+        if(statystyki.Najczestszy == null)
+        {
+            PokazKomunikat("Brak informacji.");
+        }
+        else
+        {
+            WyswietlWykonanie(statystyki.Najczestszy);
+        }
+        Separator();
+        PokazKomunikat("Poszczegolne wykonania wszystkich treningów:");
+        foreach(var wykonanie in statystyki.PoszczegolneWykonania)
+        {
+            WyswietlWykonanie(wykonanie);
         }
     }
 }

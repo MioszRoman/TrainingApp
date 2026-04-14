@@ -2,6 +2,9 @@ using System;
 using System.Linq;
 using TreningApp.Models;
 using TreningApp.UI;
+
+namespace TreningApp.Services;
+
 class StatystykiService
 {
     public Statystyki PobierzStatystyki(List<HistoriaTreningu> historia)

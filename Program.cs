@@ -1,6 +1,7 @@
 using System;
 using TreningApp.Models;
 using TreningApp.UI;
+using TreningApp.Services;
 
 namespace TreningApp;
 
@@ -89,7 +90,15 @@ class Program
                     break;
                 case "11":
                     var wpisyDoStatystyk = historiaService.PobierzWszystkieWpisy();
-                    statystykiService.WyswietlStatystyki(wpisyDoStatystyk);
+                    Statystyki statystyki = statystykiService.PobierzStatystyki(wpisyDoStatystyk);
+                    if(statystyki == null)
+                    {
+                        renderer.PokazKomunikat("Brak statystyk");
+                    }
+                    else
+                    {
+                        renderer.WyswietlStatystyki(statystyki);
+                    }
                     break;
                 case "12":
                     renderer.PokazKomunikat("Zamykam aplikację...");
