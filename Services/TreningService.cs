@@ -35,7 +35,7 @@ class TreningService
     {
         for(int j = 0; j < sekundy; j++)
                     {
-                        renderer.PokazKomunikat("\r"+ komunikat + (sekundy - j) + " s. ");
+                        renderer.PokazKomunikatBezNowejLinii("\r"+ komunikat + (sekundy - j) + " s. ");
                         Thread.Sleep(1000); // Jeśli przerwa jest większa niż 0, odczekaj 1 sekundę
                     }
                     renderer.PokazKomunikat("`");
