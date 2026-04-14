@@ -4,6 +4,7 @@ using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization.Metadata;
 using TreningApp.Models;
+
 namespace TreningApp;
 
 class PlanService
@@ -15,11 +16,7 @@ class PlanService
     {
         return plany;
     }
-    /*public int GetNextId()
-    {
-        return nextId;
-    }*/
-    private JsonSerializerOptions JsonOptions()
+    static JsonSerializerOptions JsonOptions()
     {
         var options = new JsonSerializerOptions();
         options.TypeInfoResolver = new DefaultJsonTypeInfoResolver();
@@ -30,7 +27,6 @@ class PlanService
     {
         string jsonString = JsonSerializer.Serialize(plany, JsonOptions());
         File.WriteAllText(sciezkaPlanow, jsonString);
-        //Console.WriteLine("Zapisano pomyślnie do pliku Plany.json");
     }
     public void OdczytPlanow()
     {
@@ -66,16 +62,14 @@ class PlanService
         {
             nextId = 1;
         }
-        //Druga opcja "bardziej pro" ----> nextId = plany.Max(p => p.Id) + 1; 
-        //Potrzebne do tego jeszcze using System.Linq; 
     }
-    public void DodajPlan(string nazwaPlanu, int poziom, string rodzajTreningu, int iloscObwodow, int przerwaO, List<Cwiczenie> listaCwiczen)
+    public int DodajPlan(string nazwaPlanu, int poziom, string rodzajTreningu, int iloscObwodow, int przerwaO, List<Cwiczenie> listaCwiczen)
     {
         int noweId = nextId;
         plany.Add(new Plan(nazwaPlanu, poziom, rodzajTreningu, iloscObwodow,noweId , przerwaO, listaCwiczen));
         nextId++;
         ZapisPlanow();
-        Console.WriteLine("Trening został dodany pomyślnie, jego ID to: " + noweId);
+        return noweId;
     }
     public Plan? ZnajdzPlanPoId(int id)
     {
@@ -88,17 +82,16 @@ class PlanService
         }
         return null;
     }
-    public void UsunPlanPoId(int id)
+    public bool UsunPlanPoId(int id)
     {
         Plan? planDoUsuniecia = ZnajdzPlanPoId(id);
         if(planDoUsuniecia == null)
         {
-            Console.WriteLine("Nie ma planu o takim ID!");
-            return;
+            return false;
         }
         plany.Remove(planDoUsuniecia);
-        Console.WriteLine("Pomyślnie usunięto plan!");
         ZapisPlanow();
+        return true;
     }
     public void EdytujPlanPoId(Plan planDoEdycji, string nazwa, int poziom, string rodzaj, int iloscObwodow, int przerwaO, List<Cwiczenie> noweCwiczenia)
     {

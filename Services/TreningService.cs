@@ -1,10 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Threading;
-using System.IO;
-using System.Text.Json;
-using System.Text.Json.Serialization.Metadata;
-using System.Linq;
 using TreningApp.Models;
 using TreningApp.UI;
 
@@ -18,8 +13,8 @@ class TreningService
     private ConsoleRenderer renderer = new ConsoleRenderer();
     public void WyswietlPodsumowanieAktualnegoTreningu()
     {
-        Console.WriteLine("Podsumowanie treningu: ");
-        Console.WriteLine("===========================================");
+        renderer.PokazNaglowek("Podsumowanie treningu: ");
+        renderer.MocnySeparator();
         foreach(var trening in listaTreningow)
         {
             renderer.WyswietlSesje(trening);
@@ -40,34 +35,32 @@ class TreningService
     {
         for(int j = 0; j < sekundy; j++)
                     {
-                        Console.Write("\r"+ komunikat + (sekundy - j) + " s. ");
+                        renderer.PokazKomunikat("\r"+ komunikat + (sekundy - j) + " s. ");
                         Thread.Sleep(1000); // Jeśli przerwa jest większa niż 0, odczekaj 1 sekundę
                     }
-                    Console.WriteLine();
+                    renderer.PokazKomunikat("`");
     }
     private void WykonanieCwiczenWObwodzie(Plan plan, int obwod)
     {
         foreach(var cwiczenie in plan.Cwiczenia)
         {
-            Console.WriteLine("Wykonujesz ćwiczenie: " + cwiczenie.NazwaCwiczenia);
-            //Console.WriteLine("Serii: " + cwiczenie.LiczbaSerii);
+            renderer.PokazKomunikat("Wykonujesz ćwiczenie: " + cwiczenie.NazwaCwiczenia);
             for(int i = 1; i <= cwiczenie.LiczbaSerii; i++)
             {
                 DateTime startSerii = DateTime.Now;
-                Console.WriteLine("Wykonujesz serię " + i + " z " + cwiczenie.LiczbaSerii);
-                Console.WriteLine("Powtórzenia: " + cwiczenie.LiczbaPowtorzen);
-                Console.WriteLine("Po zakończeniu ćwiczenia naciśnij Enter, aby przejść do przerwy...");
+                renderer.PokazKomunikat("Wykonujesz serię " + i + " z " + cwiczenie.LiczbaSerii);
+                renderer.PokazKomunikat("Powtórzenia: " + cwiczenie.LiczbaPowtorzen);
+                renderer.PokazKomunikat("Po zakończeniu ćwiczenia naciśnij Enter, aby przejść do przerwy...");
                 while(Console.ReadKey().Key != ConsoleKey.Enter) {/*Czekaj na wciśnięcie klawisza Enter*/}
                 DateTime stopSerii = DateTime.Now;
                 TimeSpan czasTrwaniaSerii = stopSerii - startSerii;
                 listaSerii.Add(new SesjaSerii(plan, cwiczenie, i, startSerii, czasTrwaniaSerii, obwod));
-                //Console.WriteLine("Przerwa miedzy seriami: " + cwiczenie.PrzerwaMiedzySeriami + " s.");
                 if (cwiczenie != plan.Cwiczenia[^1] || i != cwiczenie.LiczbaSerii) // Jeśli to nie jest ostatnia seria i nie jest to ostatnie ćwiczenie w obwodzie
                 {
                     Odliczanie(cwiczenie.PrzerwaMiedzySeriami, "Przerwa miedzy seriami: ");
                 }
             }
-            Console.WriteLine("---------------------------------------------------------------");
+            renderer.Separator();
         }
     }
     private void WykonanieObwodu(Plan planDoZaczecia)
@@ -75,7 +68,7 @@ class TreningService
         for(int obwod = 1; obwod <= planDoZaczecia.IloscObwodow; obwod++)
         {
             DateTime startObwodu = DateTime.Now;
-            Console.WriteLine("Obwód " + obwod + " z " + planDoZaczecia.IloscObwodow);
+            renderer.PokazKomunikat("Obwód " + obwod + " z " + planDoZaczecia.IloscObwodow);
             WykonanieCwiczenWObwodzie(planDoZaczecia, obwod);
             DateTime stopObwodu = DateTime.Now;
             TimeSpan czasTrwaniaObwodu = stopObwodu - startObwodu;
@@ -85,16 +78,16 @@ class TreningService
                 Odliczanie(planDoZaczecia.PrzerwaMiedzyObwodami, "Przerwa miedzy obwodami: ");
             }
         }
-    }
+    } 
     public void WykonajTreningZWynikiem(Plan planDoZaczecia, HistoriaService historiaService)
     {
         listaTreningow.Clear();
         listaObwodow.Clear();
         listaSerii.Clear();
-        Console.WriteLine("Zaczynasz trening: " + planDoZaczecia.Nazwa);
+        renderer.PokazKomunikat("Zaczynasz trening: " + planDoZaczecia.Nazwa);
         DateTime startTreningu = DateTime.Now;
         WykonanieObwodu(planDoZaczecia);
-        Console.WriteLine("Trening zakończony! Świetna robota, starx!");
+        renderer.PokazSukces("Trening zakończony! Świetna robota, starx!");
         DateTime stopTreningu = DateTime.Now;
         TimeSpan czasTrwaniaTreningu = stopTreningu - startTreningu;
         listaTreningow.Add(new SesjaTreningowa(planDoZaczecia, startTreningu, czasTrwaniaTreningu));

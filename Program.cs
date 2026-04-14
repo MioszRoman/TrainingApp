@@ -39,7 +39,7 @@ class Program
                     RozpocznijTrening();
                     break;
                 case "4":
-                    renderer.PokazNaglowek("Twoje plany z cwiczeniami: ");
+                    renderer.PokazNaglowek("Twoje plany z ćwiczeniami: ");
                     renderer.MocnySeparator();
                     foreach(var plan in planService.GetPlany())
                     {
@@ -48,7 +48,15 @@ class Program
                     break;
                 case "5":
                     int idDoUsuniecia = inputHelper.PobierzLiczbe("Podaj Id treningu, który chcesz usunąć: ",1 , 100, "Nie udało się znaleźć takiego treningu!");
-                    planService.UsunPlanPoId(idDoUsuniecia);
+                    bool wynik = planService.UsunPlanPoId(idDoUsuniecia);
+                    if(wynik)
+                    {
+                        renderer.PokazSukces("Pomyślnie usunięto plan!");
+                    }
+                    else
+                    {
+                        renderer.PokazBlad("Nie ma planu o takim ID!");
+                    }
                     break;
                 case "6":
                     EdytujPlan();
@@ -105,10 +113,6 @@ class Program
                     isRunning = false;
                     break;
                 default:
-                    if(choice == null)
-                    {
-                    break;
-                    }
                     renderer.PokazBlad("Błędna opcja. Spróbuj ponownie.");
                     break;
             }
@@ -124,7 +128,7 @@ class Program
         renderer.PokazKomunikat("4. Wyświetl treningi z ćwiczeniami");
         renderer.PokazKomunikat("5. Usuń plan po ID.");
         renderer.PokazKomunikat("6. Edytuj plan");
-        renderer.PokazKomunikat("7. Wyswietl historie treningow");
+        renderer.PokazKomunikat("7. Wyświetl historie treningów");
         renderer.PokazKomunikat("8. Wyświetl plan po id");
         renderer.PokazKomunikat("9. Wyświetl historie z konkretnego przedziału.");
         renderer.PokazKomunikat("10. Usuń wpis z historii");
@@ -134,70 +138,42 @@ class Program
     }
     static void DodajPlan()
     {
-        string nazwaPlanu = inputHelper.PobierzTekst("Podaj nazwę treningu: ", "Upewnij się że podałeś odpowieni tekst");
-        if(nazwaPlanu == null)
-        {
-            return;
-        }
+        string nazwaPlanu = inputHelper.PobierzTekst("Podaj nazwę treningu: ", "Upewnij się że podałeś odpowiedni tekst");
         int poziom = inputHelper.PobierzPoziom();
-        if(poziom == -1)
-        {
-            return;
-        }
-        string rodzajTreningu = inputHelper.PobierzTekst("Podaj rodzaj treningu (np. siłowy, cardio): ", "Upewnij się, że podałeś odpowieni tekst");
-        if(rodzajTreningu == null)
-        {
-            return;
-        }
+        string rodzajTreningu = inputHelper.PobierzTekst("Podaj rodzaj treningu (np. siłowy, cardio): ", "Upewnij się, że podałeś odpowiedni tekst");
         int iloscObwodow = inputHelper.PobierzIloscObwodow(1);
-        if(iloscObwodow == -1)
-        {
-            return;
-        }
         int przerwaO = inputHelper.PobierzPrzerweMiedzyObwodami(iloscObwodow);
-        if(przerwaO == -1)
-        {
-            renderer.PokazBlad("Nie udało się pobrać przerwy miedzy obwodami!\nUpewnij się że podałeś odpowieną długość przerwy!");
-            return;
-        }
-        List<Cwiczenie>? listaCwiczen = inputHelper.PobierzCwiczenia();
-        if(listaCwiczen == null)
-        {
-            renderer.PokazBlad("Nie udało się pobrać listy cwiczen!\nTworzenie planu zostało przerwane.");
-            return;
-        }
-        planService.DodajPlan(nazwaPlanu, poziom, rodzajTreningu, iloscObwodow, przerwaO, listaCwiczen);
+        List<Cwiczenie> listaCwiczen = inputHelper.PobierzCwiczenia();
+        int noweID = planService.DodajPlan(nazwaPlanu, poziom, rodzajTreningu, iloscObwodow, przerwaO, listaCwiczen);
+        renderer.PokazSukces($"Pomyślnie dodano plan! ID: {noweID}");
     }
     static void RozpocznijTrening()
     {
         int id = inputHelper.WezId();
-        if(id == -1)
-        {
-            return; // Jeśli ID jest nieprawidłowe, zakończ funkcję i wróć do menu
-        }
         Plan? aktualnyPlan = planService.ZnajdzPlanPoId(id);
         if(aktualnyPlan != null)
         {
             treningService.WykonajTreningZWynikiem(aktualnyPlan, historiaService);
         }else
         {
-            renderer.PokazBlad("Nie znaleziono treningu o podanym id. Upewnij się, że podałeś poprawne ID.");
+            renderer.PokazBlad("Nie znaleziono treningu o podanym ID. Upewnij się, że podałeś poprawne ID.");
         }
     }
     static void FiltrujHistoriePoDacie()
     {
         renderer.PokazKomunikatBezNowejLinii("Podaj datę OD (dd.MM.yyyy): ");
         string? odInput = Console.ReadLine();
+        string blad = "Nie podano poprawnej daty";
         if(!DateTime.TryParse(odInput, out DateTime od))
         {
-            renderer.PokazBlad("Nie podano poprawnej daty!");
+            renderer.PokazBlad(blad);
             return;
         }
         renderer.PokazKomunikatBezNowejLinii("Podaj datę Do (dd.MM.yyyy): ");
         string? doInput = Console.ReadLine();
         if(!DateTime.TryParse(doInput, out DateTime doKiedy))
         {
-            renderer.PokazBlad("Nie podano poprawnej daty!");
+            renderer.PokazBlad(blad);
             return;
         }
         if(od > doKiedy)
@@ -218,27 +194,20 @@ class Program
     static void EdytujPlan()
     {
         int idDoEdycji = inputHelper.PobierzLiczbe("Podaj ID treningu do edycji: ", 1, 100, "Nie udało się znaleźć planu o takim ID.");
-        if(idDoEdycji == -1)
-        {   
-            return;
-        }
         Plan? planDoEdycji = planService.ZnajdzPlanPoId(idDoEdycji);
         if(planDoEdycji == null)
         {
             renderer.PokazBlad("Nie ma takiego planu!");
             return;
         }
-        else
-        {
-            renderer.PokazNaglowek("Edytowany plan");
-            renderer.WyswietlPlan(planDoEdycji);
-        }
+        renderer.PokazNaglowek("Edytowany plan");
+        renderer.WyswietlPlan(planDoEdycji);
         string nowaNazwa = inputHelper.PobierzTekstDoEdycji("Podaj nową nazwę (Enter = bez zmian): ");
         if(string.IsNullOrWhiteSpace(nowaNazwa))
         {
             nowaNazwa = planDoEdycji.Nazwa;
         }
-        int? nowyPoziom = inputHelper.PobierzLiczbeDoEdycji("Podaj nowy poziom (1, 10) (Enter = bez zmian): ", 1, 10, "Upewnij się że podałeś liczbę w odpowienim przedziale!");
+        int? nowyPoziom = inputHelper.PobierzLiczbeDoEdycji("Podaj nowy poziom (1, 10) (Enter = bez zmian): ", 1, 10, "Upewnij się że podałeś liczbę w odpowiednim przedziale!");
         if(nowyPoziom == null)
         {
             nowyPoziom = planDoEdycji.Poziom;
@@ -248,7 +217,7 @@ class Program
         {
             nowyRodzaj = planDoEdycji.Rodzaj;
         }
-        int? nowaIloscObwodow = inputHelper.PobierzLiczbeDoEdycji("Podaj nowa ilosc obwodow (Enter = bez zmian): ", 0, 50, "Upewnij się że podałeś liczbę.");
+        int? nowaIloscObwodow = inputHelper.PobierzLiczbeDoEdycji("Podaj nową ilosc obwodów (Enter = bez zmian): ", 0, 50, "Upewnij się że podałeś liczbę.");
         if(nowaIloscObwodow == null)
         {
             nowaIloscObwodow = planDoEdycji.IloscObwodow;
@@ -262,15 +231,8 @@ class Program
         List<Cwiczenie> cwiczeniaDoDodania = planDoEdycji.Cwiczenia;        
         if(decyzja)
         {
-        List<Cwiczenie>? listaCwiczenDoDodania = inputHelper.PobierzCwiczenia();
-        if(listaCwiczenDoDodania == null)
-        {
-            renderer.PokazBlad("Nie udało się pobrać listy cwiczen!\nZostawiono bez zmian");
-        }
-            else
-            {
-                cwiczeniaDoDodania = listaCwiczenDoDodania;
-            }
+        List<Cwiczenie> listaCwiczenDoDodania = inputHelper.PobierzCwiczenia();
+            cwiczeniaDoDodania = listaCwiczenDoDodania;
         }
         planService.EdytujPlanPoId(planDoEdycji, nowaNazwa, nowyPoziom.Value, nowyRodzaj, nowaIloscObwodow.Value, nowaPrzerwaMiedzyObwodami.Value, cwiczeniaDoDodania);
         renderer.PokazSukces("Udało się pomyślnie edytować plan!");

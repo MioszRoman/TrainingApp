@@ -1,21 +1,22 @@
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using TreningApp.Models;
+using TreningApp.UI;
 
 namespace TreningApp;
 
 class InputHelper
 {
+    private ConsoleRenderer renderer = new ConsoleRenderer();
     public bool Decyzja(string komunikat, string blad)
     {
         while(true)
         {
-            Console.Write(komunikat);
+            renderer.PokazKomunikatBezNowejLinii(komunikat);
             string? userInput = Console.ReadLine();
             if(string.IsNullOrWhiteSpace(userInput))
             {
-                Console.WriteLine(blad);
+                renderer.PokazBlad(blad);
                 continue;
             }
             string input = userInput.Trim().ToLower();
@@ -27,33 +28,28 @@ class InputHelper
             {
                 return false;
             }
-            else
-            {
-                Console.WriteLine(blad);
-                continue;
-            }
-            
+            renderer.PokazBlad(blad);
         }
     }
     public int PobierzLiczbe(string komunikat, int liczbaMin, int liczbaMax, string blad)
     {   
         while(true)
         {
-            Console.Write(komunikat);
+            renderer.PokazKomunikatBezNowejLinii(komunikat);
             bool czyLiczba = int.TryParse(Console.ReadLine(), out int liczba);
             if(!czyLiczba)
             {
-                Console.WriteLine(blad);
+                renderer.PokazBlad(blad);
                 continue;
             }
             if(liczba < liczbaMin)
             {
-                Console.WriteLine(blad);
+                renderer.PokazBlad(blad);
                 continue;
             }
             if(liczba > liczbaMax)
             {
-                Console.WriteLine(blad);
+                renderer.PokazBlad(blad);
                 continue;
             }
             return liczba;
@@ -63,11 +59,11 @@ class InputHelper
     {
         while(true)
         {
-            Console.Write(komunikat);
+            renderer.PokazKomunikatBezNowejLinii(komunikat);
             string? text = Console.ReadLine();
             if(string.IsNullOrWhiteSpace(text))
             {
-                Console.WriteLine(blad);
+                renderer.PokazBlad(blad);
                 continue;
             }
             return text;
@@ -75,7 +71,7 @@ class InputHelper
     }
     public string PobierzTekstDoEdycji(string komunikat)
     {
-        Console.Write(komunikat);
+        renderer.PokazKomunikatBezNowejLinii(komunikat);
         string? text = Console.ReadLine();
         if(string.IsNullOrWhiteSpace(text))
         {
@@ -85,9 +81,9 @@ class InputHelper
     }
     public int? PobierzLiczbeDoEdycji(string komunikat, int liczbaMin, int liczbaMax, string blad)
     {
-        do
+        while(true)
         {
-            Console.Write(komunikat);
+            renderer.PokazKomunikatBezNowejLinii(komunikat);
             string? text = Console.ReadLine();
             if(string.IsNullOrWhiteSpace(text))
             {
@@ -96,21 +92,21 @@ class InputHelper
             bool czyLiczba = int.TryParse(text, out int liczba);
             if(!czyLiczba)
             {
-                Console.WriteLine(blad);
+                renderer.PokazBlad(blad);
                 continue;
             }
             if(liczba < liczbaMin)
             {
-                Console.WriteLine(blad);
+                renderer.PokazBlad(blad);
                 continue;
             }
             if(liczba > liczbaMax)
             {
-                Console.WriteLine(blad);
+                renderer.PokazBlad(blad);
                 continue;
             }
             return liczba;
-        }while(true);
+        }
     }
     public int PobierzIloscObwodow(int liczbaMin)
     {
@@ -132,39 +128,16 @@ class InputHelper
     {
         return PobierzLiczbe("Podaj ilość ćwiczeń: ", 1, 50, "Ilość ćwiczeń nie może być równa 0!");
     }
-    public List<Cwiczenie>? PobierzCwiczenia()
+    public List<Cwiczenie> PobierzCwiczenia()
     {
         int ilosc = PobierzIloscCwiczen();
-        if(ilosc == -1)
-        {
-            return null;
-        }
         List<Cwiczenie> cwiczenia = new List<Cwiczenie>();
         for(int i = 1; i <= ilosc; i++)
         {
             string nazwaCwiczenia = PobierzTekst("Podaj nazwę ćwiczenia #" + i + ": ", "Upewnij się, że podałeś nazwę!");
-            if(nazwaCwiczenia == null)
-            {
-                return null;
-            }
             int serie = PobierzSerie(i);
-            if(serie == -1)
-            {
-                Console.WriteLine("Upewnij się że podałeś ilość serii większą od zera!");
-                return null;
-            }
             int powtorzenia = PobierzPowtorzenia(i);
-            if(powtorzenia == -1)
-            {
-                Console.WriteLine("Upewnij się że podałeś ilość powtorzeń większą od zera!");
-                return null;
-            }
             int przerwa = PobierzPrzerweMiedzySeriami(i);
-            if(przerwa == -1)
-            {
-                Console.WriteLine("Upewnij się że podałeś poprawna długość przerwy!");
-                return null;
-            }
             cwiczenia.Add(new Cwiczenie(nazwaCwiczenia, serie, powtorzenia, przerwa));
         } 
         return cwiczenia;
