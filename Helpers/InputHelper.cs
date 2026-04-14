@@ -1,42 +1,76 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using TreningApp.Models;
 
 namespace TreningApp;
 
 class InputHelper
 {
-    public int PobierzLiczbe(string komunikat, int liczbaMin, int liczbaMax, string blad)
+    public bool Decyzja(string komunikat, string blad)
     {
-        Console.Write(komunikat);
-        bool czyLiczba = int.TryParse(Console.ReadLine(), out int liczba);
-        if(!czyLiczba)
+        while(true)
         {
-            Console.WriteLine(blad);
-            return -1;
+            Console.Write(komunikat);
+            string input = Console.ReadLine().Trim().ToLower();
+            if(string.IsNullOrWhiteSpace(input))
+            {
+                Console.WriteLine(blad);
+                continue;
+            }
+            if(input == "tak" || input == "t")
+            {
+                return true;
+            }
+            if(input == "nie" || input == "n")
+            {
+                return false;
+            }
+            else
+            {
+                Console.WriteLine(blad);
+                continue;
+            }
+            
         }
-        if(liczba < liczbaMin)
+    }
+    public int PobierzLiczbe(string komunikat, int liczbaMin, int liczbaMax, string blad)
+    {   
+        while(true)
         {
-            Console.WriteLine(blad);
-            return -1;
+            Console.Write(komunikat);
+            bool czyLiczba = int.TryParse(Console.ReadLine(), out int liczba);
+            if(!czyLiczba)
+            {
+                Console.WriteLine(blad);
+                continue;
+            }
+            if(liczba < liczbaMin)
+            {
+                Console.WriteLine(blad);
+                continue;
+            }
+            if(liczba > liczbaMax)
+            {
+                Console.WriteLine(blad);
+                continue;
+            }
+            return liczba;
         }
-        if(liczba > liczbaMax)
-        {
-            Console.WriteLine(blad);
-            return -1;
-        }
-        return liczba;
     }
     public string PobierzTekst(string komunikat, string blad)
     {
-        Console.Write(komunikat);
-        string text = Console.ReadLine();
-        if(string.IsNullOrWhiteSpace(text))
+        while(true)
         {
-            Console.WriteLine(blad);
-            return null;
+            Console.Write(komunikat);
+            string text = Console.ReadLine();
+            if(string.IsNullOrWhiteSpace(text))
+            {
+                Console.WriteLine(blad);
+                continue;
+            }
+            return text;
         }
-        return text;
     }
     public string PobierzTekstDoEdycji(string komunikat)
     {

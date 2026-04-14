@@ -10,7 +10,6 @@ class PlanService
 {
     private List<Plan> plany = new List<Plan>();
     private string sciezkaPlanow = Path.Combine("Data", "Plany.json");
-    private InputHelper inputHelper = new InputHelper();
     private int nextId = 1;
     public List<Plan> GetPlany()
     {

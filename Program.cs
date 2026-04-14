@@ -273,6 +273,6 @@ class Program
             }
         }
         planService.EdytujPlanPoId(planDoEdycji, nowaNazwa, nowyPoziom.Value, nowyRodzaj, nowaIloscObwodow.Value, nowaPrzerwaMiedzyObwodami.Value, cwiczeniaDoDodania);
-    
+        renderer.PokazSukces("Udało się pomyślnie edytować plan!");
     }
 }
