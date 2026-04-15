@@ -102,7 +102,7 @@ public class ConsoleRenderer
     public void WyswietlWpisHistorii(HistoriaTreningu historiaPlanu)
     {
         Separator();
-        Console.WriteLine($"ID treningu:  {historiaPlanu.IdPlanu}");
+        Console.WriteLine($"ID treningu:  {historiaPlanu.PlanId}");
         Console.WriteLine("Nazwa planu: " + historiaPlanu.NazwaPlanu);
         Console.WriteLine("Data treningu: " + historiaPlanu.DataTreningu.ToString("dd.MM.yyyy HH:mm"));
         string komunikat = FormatujCzas(historiaPlanu.CzasTrwania);

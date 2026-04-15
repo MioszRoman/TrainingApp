@@ -56,7 +56,7 @@ class HistoriaService
     public List<HistoriaTreningu> PobierzWpisyPlanu(int id)
     {
         return historia
-        .Where(h => h.IdPlanu == id)
+        .Where(h => h.PlanId == id)
         .OrderByDescending(h => h.DataTreningu)
         .ToList();
     }
@@ -71,7 +71,7 @@ class HistoriaService
         {
             return 0;
         }
-        int ileUsunieto = historia.RemoveAll(h => h.IdPlanu == id);
+        int ileUsunieto = historia.RemoveAll(h => h.PlanId == id);
         if(ileUsunieto == 0)
         {
             return -1;
