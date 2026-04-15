@@ -13,19 +13,30 @@ TrainingApp to aplikacja CLI napisana w .NET, która pozwala użytkownikowi:
 - analizować statystyki treningowe.
 
 Projekt został stworzony w celach edukacyjnych, z naciskiem na:
+
 - czystą strukturę kodu,
 - rozdzielenie logiki i UI,
-- pracę z plikami JSON,
-- obsługę błędów i walidację danych.
+- pracę z bazą danych (EF Core),
+- logikę biznesową i integralność danych.
+
+---
+
+## 💡 Jak działa aplikacja
+
+Użytkownik tworzy plan treningowy składający się z ćwiczeń i obwodów.  
+Następnie może rozpocząć trening, przechodząc przez kolejne serie i przerwy.  
+
+Po zakończeniu treningu wynik zapisywany jest do bazy danych przy użyciu Entity Framework Core,  
+a dane mogą być później analizowane w sekcji statystyk.
 
 ---
 
 ## 🚀 Funkcjonalności
 
 ### 📋 Zarządzanie planami
-- dodawanie planu treningowego
-- edycja planu wraz z możliwością wyboru czy chcemy edytować ćwiczenia
-- usuwanie planu
+- dodawanie planów treningowych
+- edycja planów wraz z możliwością wyboru czy chcemy edytować ćwiczenia
+- usuwanie planów
 - wyświetlanie planów (z ćwiczeniami i bez)
 
 ### 🏃 Wykonywanie treningu
@@ -34,7 +45,7 @@ Projekt został stworzony w celach edukacyjnych, z naciskiem na:
 - podsumowanie po zakończeniu
 
 ### 📜 Historia treningów
-- zapis historii do pliku JSON
+- zapis historii do bazy danych
 - wyświetlanie wszystkich treningów
 - filtrowanie po dacie
 - wyszukiwanie po ID planu
@@ -49,15 +60,12 @@ Projekt został stworzony w celach edukacyjnych, z naciskiem na:
 - najdłuższy trening w ostatnim tygodniu
 - liczba wykonań poszczególnych planów
 
----
-
-## 💡 Jak działa aplikacja
-
-Użytkownik tworzy plan treningowy składający się z ćwiczeń i obwodów.  
-Następnie może rozpocząć trening, przechodząc przez kolejne serie i przerwy.  
-
-Po zakończeniu treningu wynik zapisywany jest do historii (plik JSON),  
-a dane mogą być później analizowane w sekcji statystyk.
+### Logika biznesowa
+Aplikacja zawiera podstawowe zasady biznesowe:
+- Nie można usunąć planu, jeśli istnieją wpisy historii dla tego planu
+- relacja **Plan (1) → (N) Cwiczenia**
+- relacja **Plan (1) → (N) HistoriaTreningu**
+- spójność danych między planami i historią
 
 ---
 
@@ -65,8 +73,23 @@ a dane mogą być później analizowane w sekcji statystyk.
 
 - C#
 - .NET
-- JSON (System.Text.Json)
-- LINQ
+- Entity Framework Core 
+- SQLite
+- Linq
+
+---
+
+## Baza danych
+Aplikacja korzysta z bazy SQLite zarządzanej przez Entity Framework Core.
+
+### Tabele:
+- `Plany`
+- `Cwiczenia`
+- `HistoriaTreningow`
+
+### Relacje:
+- **Plan (1) → (N) Cwiczenia**
+- **Plan (1) → (N) HistoriaTreningu**
 
 ---
 
@@ -77,7 +100,8 @@ TreningApp/
 ├── Services/ # logika biznesowa (PlanService, HistoriaService, StatystykiService)
 ├── UI/ # ConsoleRenderer (obsługa wyświetlania)
 ├── Helpers/ # InputHelper (obsługa inputu i walidacji)
-├── Data/ # pliki JSON (plany, historia)
+├── Data/ # Konfiguracja bazy danych (DbContext)
+├── Migrations/ # pliki migracyjne EF Core
 ├── Program.cs # punkt wejścia aplikacji
 ```
 
@@ -93,7 +117,15 @@ git clone https://github.com/MioszRoman/TrainingApp.git
 ```bash
 cd TrainingApp
 ```
-3. Uruchom aplikację:
+3. Zainstaluj zależności:
+```bash
+dotnet restore
+```
+4. Utwórz bazę danych:
+```bash
+dotnet ef database update
+```
+5. Uruchom aplikację:
 ```bash
 dotnet run
 ```
@@ -106,26 +138,41 @@ dotnet run
 ---
 
 ## 📈 Etapy rozwoju
-### ✅ Etap 1 (obecny)
+### ✅ Etap 1 (Zakończony)
 - aplikacja konsolowa (CLI)
 - zapis danych do JSON
 - historia i statystyki
 - walidacja inputu
 - brak warningów nullable
-### 🔜 Etap 2
-- zamiana JSON na bazę danych
-- wersja desktopowa
+Technologie:
+- C#
+- .NET
+- JSON (System.Text.Json)
+- LINQ
+### ✅ Etap 2 (Zakończony)
+- migracja z JSON -> baza danych
+- Entity Framework Core
+- SQLite
+- relacje między encjami
+- logika biznesowa (blokada usuwania planu z historią)
+### 🔜 Etap 3
+- API lub aplikacja desktopowa
+- dalszy rozwój architektury
+- możliwa migracja do PostgreSQL
 
 ---
 
 ## 🧠 Czego się nauczyłem
 
 - pracy z architekturą aplikacji (rozdzielenie logiki i UI)
-- zarządzania stanem aplikacji (shared services)
-- obsługi danych i serializacji JSON
-- eliminowania warningów nullable w C#
+- pracy z Entity Framework Core
+- projektowania relacji w bazie danych
+- refaktoryzacji kodu i poprawy struktury projektu
+- zarządzania migracjami i bazą danych
 
 ---
 
 ## 💡 Autor 
 Projekt stworzony przez: Miłosz Roman
+
+---
