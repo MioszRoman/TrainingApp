@@ -1,53 +1,34 @@
 using System;
-using System.IO;
-using System.Text.Json;
-using System.Text.Json.Serialization.Metadata;
 using TreningApp.Models;
 
 namespace TreningApp;
 
 class HistoriaService
 {
-    private List<HistoriaTreningu> historia = new();
-    private readonly string sciezkaHistorii = Path.Combine("Data", "Historia.json");
-    private readonly JsonSerializerOptions options = new JsonSerializerOptions
+    private AppDbContext _context;
+    public HistoriaService(AppDbContext context)
     {
-        TypeInfoResolver = new DefaultJsonTypeInfoResolver(),
-        WriteIndented = true
-    };
-    public void ZapisHistorii()
-    {
-        string jsonString = JsonSerializer.Serialize(historia, options);
-        File.WriteAllText(sciezkaHistorii, jsonString);
+        _context = context;
     }
-    public void OdczytHistorii()
+    public void DodajWpisHistorii(int planId, string nazwaPlanu, DateTime dataTreningu, double czasTrwania)
     {
-        if(!File.Exists(sciezkaHistorii))
-        {
-            return;
-        }
-        string zapis = File.ReadAllText(sciezkaHistorii);
-        if(string.IsNullOrWhiteSpace(zapis))
-        {
-            historia = new List<HistoriaTreningu>();
-            return;
-        }
-        var des = JsonSerializer.Deserialize<List<HistoriaTreningu>>(zapis, options);
-        if(des != null)
-        {
-            historia = des;
-        }
+        HistoriaTreningu wpisHistorii = new HistoriaTreningu(planId, nazwaPlanu, dataTreningu, czasTrwania);
+        _context.HistoriaTreningow.Add(wpisHistorii);
+        _context.SaveChanges();
     }
-
+    public List<HistoriaTreningu> GetHistoria()
+    {
+        return _context.HistoriaTreningow.ToList();
+    }
     public List<HistoriaTreningu> PobierzWszystkieWpisy()
     {
-        return historia
+        return _context.HistoriaTreningow
         .OrderByDescending(h => h.DataTreningu)
         .ToList();
     }
     public List<HistoriaTreningu> PobierzWpisyZDat(DateTime od, DateTime doKiedy)
     {
-        return historia
+        return _context.HistoriaTreningow
         .Where(h => h.DataTreningu.Date >= od.Date && h.DataTreningu.Date <= doKiedy.Date)
         .OrderByDescending(h => h.DataTreningu)
         .ToList();
@@ -55,31 +36,26 @@ class HistoriaService
 
     public List<HistoriaTreningu> PobierzWpisyPlanu(int id)
     {
-        return historia
+        return _context.HistoriaTreningow
         .Where(h => h.PlanId == id)
         .OrderByDescending(h => h.DataTreningu)
         .ToList();
     }
     public void ZapiszHistorie(Plan planDoZaczecia, DateTime startTreningu, TimeSpan czasTrwaniaTreningu)
     {
-        historia.Add(new HistoriaTreningu(planDoZaczecia.Id, planDoZaczecia.Nazwa, startTreningu, czasTrwaniaTreningu.TotalSeconds));
-        ZapisHistorii();
+        DodajWpisHistorii(planDoZaczecia.Id, planDoZaczecia.Nazwa, startTreningu, czasTrwaniaTreningu.TotalSeconds);
     }
     public int UsunWpisHistoriiPoId(int id)
     {
-        if(historia.Count == 0)
-        {
-            return 0;
-        }
-        int ileUsunieto = historia.RemoveAll(h => h.PlanId == id);
-        if(ileUsunieto == 0)
+        List<HistoriaTreningu> wpisyDoUsuniecia = _context.HistoriaTreningow
+        .Where(historia => historia.PlanId == id)
+        .ToList();
+        if(wpisyDoUsuniecia.Count == 0)
         {
             return -1;
         }
-        else
-        {
-            ZapisHistorii();
-            return ileUsunieto;
-        }
+        _context.HistoriaTreningow.RemoveRange(wpisyDoUsuniecia);
+        _context.SaveChanges();
+        return wpisyDoUsuniecia.Count;
     }
 }

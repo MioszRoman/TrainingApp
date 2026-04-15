@@ -12,12 +12,11 @@ class Program
     static TreningService treningService = new TreningService();
     static ConsoleRenderer renderer = new ConsoleRenderer(); 
     static InputHelper inputHelper = new InputHelper();
-    static HistoriaService historiaService = new HistoriaService();
+    static HistoriaService historiaService = new HistoriaService(context);
     static StatystykiService statystykiService = new StatystykiService();
     static bool isRunning = true;
     static void Main(string[] args)
     {
-        historiaService.OdczytHistorii();
         while (isRunning)
         {
             ShowMenu();
@@ -128,9 +127,9 @@ class Program
         renderer.PokazKomunikat("4. Wyświetl treningi z ćwiczeniami");
         renderer.PokazKomunikat("5. Usuń plan po ID.");
         renderer.PokazKomunikat("6. Edytuj plan");
-        renderer.PokazKomunikat("7. Wyświetl historie treningów");
-        renderer.PokazKomunikat("8. Wyświetl plan po id");
-        renderer.PokazKomunikat("9. Wyświetl historie z konkretnego przedziału.");
+        renderer.PokazKomunikat("7. Wyświetl historię treningów");
+        renderer.PokazKomunikat("8. Wyświetl historię planu po id");
+        renderer.PokazKomunikat("9. Wyświetl historię z konkretnego przedziału.");
         renderer.PokazKomunikat("10. Usuń wpis z historii");
         renderer.PokazKomunikat("11. Statystyki");
         renderer.PokazKomunikat("12. Zamknij aplikację");
