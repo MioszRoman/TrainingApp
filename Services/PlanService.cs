@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using TreningApp.Models;
 
 namespace TreningApp;
@@ -15,7 +16,7 @@ class PlanService
     }
     public List<Plan> GetPlany()
     {
-        return _context.Plany.ToList();
+        return _context.Plany.Include(plan => plan.Cwiczenia).ToList();
     }
     public int DodajPlan(string nazwaPlanu, int poziom, string rodzajTreningu, int iloscObwodow, int przerwaO, List<Cwiczenie> listaCwiczen)
     {
@@ -26,7 +27,7 @@ class PlanService
     }
     public Plan? ZnajdzPlanPoId(int id)
     {
-        return _context.Plany.FirstOrDefault(plan => plan.Id == id);
+        return _context.Plany.Include(plan => plan.Cwiczenia).FirstOrDefault(plan => plan.Id == id);
         
     }
     public bool UsunPlanPoId(int id)
