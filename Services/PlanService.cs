@@ -30,16 +30,21 @@ class PlanService
         return _context.Plany.Include(plan => plan.Cwiczenia).FirstOrDefault(plan => plan.Id == id);
         
     }
-    public bool UsunPlanPoId(int id)
+    public int UsunPlanPoId(int id)
     {
         Plan? planDoUsuniecia = ZnajdzPlanPoId(id);
+
         if(planDoUsuniecia == null)
         {
-            return false;
+            return 0;
+        }
+        else if(_context.HistoriaTreningow.Any(h => h.PlanId == id))
+        {
+            return -1;
         }
         _context.Plany.Remove(planDoUsuniecia);
         _context.SaveChanges();
-        return true;
+        return 1;
     }
     public void EdytujPlan(Plan planDoEdycji, string nazwa, int poziom, string rodzaj, int iloscObwodow, int przerwaO, List<Cwiczenie> noweCwiczenia)
     {

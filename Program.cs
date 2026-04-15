@@ -105,10 +105,14 @@ class Program
     static void UsunPlanPoId()
     {
         int idDoUsuniecia = inputHelper.PobierzLiczbe("Podaj Id treningu, który chcesz usunąć: ",1 , 100, "Nie udało się znaleźć takiego treningu!");
-        bool wynik = planService.UsunPlanPoId(idDoUsuniecia);
-        if(wynik)
+        int wynik = planService.UsunPlanPoId(idDoUsuniecia);
+        if(wynik == 1)
         {
             renderer.PokazSukces("Pomyślnie usunięto plan!");
+        }
+        else if(wynik == -1)
+        {
+            renderer.PokazBlad("Nie udało się usunąć! Plan ma wpisy w historii!");
         }
         else
         {
