@@ -1,0 +1,6 @@
+<Solution>
+  <Folder Name="/TrainingApp.CLI/">
+    <Project Path="TrainingApp.CLI/Trening_App.csproj" />
+  </Folder>
+  <Project Path="TrainingApp.Api/TrainingApp.Api.csproj" />
+</Solution>
