@@ -27,85 +27,34 @@ class Program
                     DodajPlan();
                     break;
                 case "2":
-                    renderer.PokazNaglowek("Twoje treningi");
-                    renderer.Separator();
-                    foreach(var plan in planService.GetPlany())
-                    {
-                        renderer.WyswietlPlan(plan);
-                    }
+                    WyswietlPlan();
                     break;
                 case "3":
                     RozpocznijTrening();
                     break;
                 case "4":
-                    renderer.PokazNaglowek("Twoje plany z ćwiczeniami: ");
-                    renderer.MocnySeparator();
-                    foreach(var plan in planService.GetPlany())
-                    {
-                        renderer.WyswietlPlanZCwiczeniami(plan);
-                    }
+                    WyswietlPlanZCwiczeniami();
                     break;
                 case "5":
-                    int idDoUsuniecia = inputHelper.PobierzLiczbe("Podaj Id treningu, który chcesz usunąć: ",1 , 100, "Nie udało się znaleźć takiego treningu!");
-                    bool wynik = planService.UsunPlanPoId(idDoUsuniecia);
-                    if(wynik)
-                    {
-                        renderer.PokazSukces("Pomyślnie usunięto plan!");
-                    }
-                    else
-                    {
-                        renderer.PokazBlad("Nie ma planu o takim ID!");
-                    }
+                    UsunPlanPoId();
                     break;
                 case "6":
                     EdytujPlan();
                     break;
                 case "7":
-                    var wpisy = historiaService.PobierzWszystkieWpisy();
-                    renderer.WyswietlHistorie(wpisy);
+                    WyswietlWszystkieWpisy();
                     break;
                 case "8":
-                    int idDoWyszukania = inputHelper.PobierzLiczbe("Podaj ID planu, który chcesz zobaczyć w historii: ", 1, 100, "Nie ma takiego planu w historii!");
-                    var wpisyZID = historiaService.PobierzWpisyPlanu(idDoWyszukania);
-                    if(wpisyZID.Count == 0)
-                    {
-                        renderer.PokazBlad("Nie znaleziono takiego planu!");
-                    }
-                    else
-                    {
-                        renderer.WyswietlHistorie(wpisyZID);
-                    }
+                    WyswietlWpisyPlanu();
                     break;
                 case "9":
                     FiltrujHistoriePoDacie();
                     break;
                 case "10":
-                    int idDoUsunieciaHistorii = inputHelper.PobierzLiczbe("Podaj ID planu, który chcesz usunąć: ", 1, 100, "Nie udało się pobrać ID");
-                    var usuniecie = historiaService.UsunWpisHistoriiPoId(idDoUsunieciaHistorii);
-                    if(usuniecie == 0)
-                    {
-                        renderer.PokazBlad("Brak historii treningów.");
-                    }
-                    else if(usuniecie == -1)
-                    {
-                        renderer.PokazBlad("Nie usunięto żadnego planu.");
-                    }
-                    else
-                    {
-                        renderer.PokazSukces($"Pomyślnie usunięto {usuniecie} wpisów.");
-                    }
+                    UsunWpisHistorii();
                     break;
                 case "11":
-                    var wpisyDoStatystyk = historiaService.PobierzWszystkieWpisy();
-                    Statystyki? statystyki = statystykiService.PobierzStatystyki(wpisyDoStatystyk);
-                    if(statystyki == null)
-                    {
-                        renderer.PokazKomunikat("Brak statystyk");
-                    }
-                    else
-                    {
-                        renderer.WyswietlStatystyki(statystyki);
-                    }
+                    WyswietlStatystyki();
                     break;
                 case "12":
                     renderer.PokazKomunikat("Zamykam aplikację...");
@@ -134,6 +83,85 @@ class Program
         renderer.PokazKomunikat("11. Statystyki");
         renderer.PokazKomunikat("12. Zamknij aplikację");
         renderer.MocnySeparator();
+    }
+    static void WyswietlWpisyPlanu()
+    {
+        int idDoWyszukania = inputHelper.PobierzLiczbe("Podaj ID planu, który chcesz zobaczyć w historii: ", 1, 100, "Nie ma takiego planu w historii!");
+        var wpisyZID = historiaService.PobierzWpisyPlanu(idDoWyszukania);
+        if(wpisyZID.Count == 0)
+        {
+            renderer.PokazBlad("Nie znaleziono takiego planu!");
+        }
+        else
+        {
+            renderer.WyswietlHistorie(wpisyZID);
+        }
+    }
+    static void WyswietlWszystkieWpisy()
+    {
+        var wpisy = historiaService.PobierzWszystkieWpisy();
+        renderer.WyswietlHistorie(wpisy);
+    }
+    static void UsunPlanPoId()
+    {
+        int idDoUsuniecia = inputHelper.PobierzLiczbe("Podaj Id treningu, który chcesz usunąć: ",1 , 100, "Nie udało się znaleźć takiego treningu!");
+        bool wynik = planService.UsunPlanPoId(idDoUsuniecia);
+        if(wynik)
+        {
+            renderer.PokazSukces("Pomyślnie usunięto plan!");
+        }
+        else
+        {
+            renderer.PokazBlad("Nie ma planu o takim ID!");
+        }
+    }
+    static void WyswietlPlan()
+    {
+        renderer.PokazNaglowek("Twoje treningi");
+        renderer.Separator();
+        foreach(var plan in planService.GetPlany())
+        {
+            renderer.WyswietlPlan(plan);
+        }
+    }
+    static void WyswietlPlanZCwiczeniami()
+    {
+        renderer.PokazNaglowek("Twoje plany z ćwiczeniami: ");
+        renderer.MocnySeparator();
+        foreach(var plan in planService.GetPlany())
+        {
+            renderer.WyswietlPlanZCwiczeniami(plan);
+        }
+    }
+    static void UsunWpisHistorii()
+    {
+        int idDoUsunieciaHistorii = inputHelper.PobierzLiczbe("Podaj ID planu, który chcesz usunąć: ", 1, 100, "Nie udało się pobrać ID");
+        var usuniecie = historiaService.UsunWpisHistoriiPoId(idDoUsunieciaHistorii);
+        if(usuniecie == 0)
+        {
+            renderer.PokazBlad("Brak historii treningów.");
+        }
+        else if(usuniecie == -1)
+        {
+            renderer.PokazBlad("Nie usunięto żadnego planu.");
+        }
+        else
+        {
+            renderer.PokazSukces($"Pomyślnie usunięto {usuniecie} wpisów.");
+        }
+    }
+    static void WyswietlStatystyki()
+    {
+        var wpisyDoStatystyk = historiaService.PobierzWszystkieWpisy();
+        Statystyki? statystyki = statystykiService.PobierzStatystyki(wpisyDoStatystyk);
+        if(statystyki == null)
+        {
+            renderer.PokazKomunikat("Brak statystyk");
+        }
+        else
+        {
+            renderer.WyswietlStatystyki(statystyki);
+        }
     }
     static void DodajPlan()
     {
