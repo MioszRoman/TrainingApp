@@ -17,14 +17,13 @@ public class Plan
     {
         
     }
-    public Plan(string nazwa, int poziom, string rodzaj, int iloscObwodow,int id, int przerwaMiedzyObwodami, List<Cwiczenie> cwiczenia)
+    public Plan(string nazwa, int poziom, string rodzaj, int iloscObwodow, int przerwaMiedzyObwodami, List<Cwiczenie> cwiczenia)
     {
         Nazwa = nazwa;
         Poziom = poziom;
         Rodzaj = rodzaj;
         IloscObwodow = iloscObwodow;
         PrzerwaMiedzyObwodami = przerwaMiedzyObwodami;
-        Id = id;
         Cwiczenia = cwiczenia;
     }
 }

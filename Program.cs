@@ -7,7 +7,8 @@ namespace TreningApp;
 
 class Program
 {   
-    static PlanService planService = new PlanService();
+    static AppDbContext context = new AppDbContext();
+    static PlanService planService = new PlanService(context);
     static TreningService treningService = new TreningService();
     static ConsoleRenderer renderer = new ConsoleRenderer(); 
     static InputHelper inputHelper = new InputHelper();
@@ -17,7 +18,6 @@ class Program
     static void Main(string[] args)
     {
         historiaService.OdczytHistorii();
-        planService.OdczytPlanow();
         while (isRunning)
         {
             ShowMenu();
@@ -234,7 +234,7 @@ class Program
         List<Cwiczenie> listaCwiczenDoDodania = inputHelper.PobierzCwiczenia();
             cwiczeniaDoDodania = listaCwiczenDoDodania;
         }
-        planService.EdytujPlanPoId(planDoEdycji, nowaNazwa, nowyPoziom.Value, nowyRodzaj, nowaIloscObwodow.Value, nowaPrzerwaMiedzyObwodami.Value, cwiczeniaDoDodania);
+        planService.EdytujPlan(planDoEdycji, nowaNazwa, nowyPoziom.Value, nowyRodzaj, nowaIloscObwodow.Value, nowaPrzerwaMiedzyObwodami.Value, cwiczeniaDoDodania);
         renderer.PokazSukces("Udało się pomyślnie edytować plan!");
     }
 }
