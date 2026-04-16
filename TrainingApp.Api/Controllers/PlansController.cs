@@ -62,4 +62,24 @@ public class PlansController : ControllerBase
         _context.SaveChanges();
         return Ok();
     }
+
+    [HttpPut("{id}")]
+    public ActionResult<Plan> UpdatePlan(int id, [FromBody] Plan updatedPlan)
+    {
+        var plan = _context.Plany
+        .Include(plan => plan.Cwiczenia)
+        .FirstOrDefault(plan => plan.Id == id);
+        if(plan == null)
+        {
+            return NotFound();
+        }
+        plan.Nazwa = updatedPlan.Nazwa;
+        plan.Poziom = updatedPlan.Poziom;
+        plan.Rodzaj = updatedPlan.Rodzaj;
+        plan.IloscObwodow = updatedPlan.IloscObwodow;
+        plan.PrzerwaMiedzyObwodami = updatedPlan.PrzerwaMiedzyObwodami;
+        plan.Cwiczenia = updatedPlan.Cwiczenia;
+        _context.SaveChanges();
+        return Ok(plan);
+    }
 }
