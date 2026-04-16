@@ -37,4 +37,29 @@ public class PlansController : ControllerBase
         }
         return Ok(plan);
     }
+
+    [HttpPost]
+    public ActionResult<Plan> CreatePlan([FromBody] Plan plan)
+    {
+        _context.Plany.Add(plan);
+        _context.SaveChanges();
+        return CreatedAtAction(nameof(GetById), new {id = plan.Id}, plan);
+    }
+
+    [HttpDelete("{id}")]
+    public ActionResult<Plan> DeletePlan(int id)
+    {
+        var plan = _context.Plany.Find(id);
+        if(plan == null)
+        {
+            return NotFound();
+        }
+        else if(_context.HistoriaTreningow.Any(h => h.PlanId == id))
+        {
+            return BadRequest("Plan ma wpis w historii i nie może być usunięty");
+        }
+        _context.Plany.Remove(plan);
+        _context.SaveChanges();
+        return Ok();
+    }
 }
