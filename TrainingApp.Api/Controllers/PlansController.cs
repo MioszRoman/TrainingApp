@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using TrainingApp.Api.Models;
-using TrainingApp.Api.Data;
+using TrainingApp.Api.Services;
 
 namespace TrainingApp.Api.Controllers;
 
@@ -9,28 +8,23 @@ namespace TrainingApp.Api.Controllers;
 [Route("api/[controller]")]
 public class PlansController : ControllerBase
 {
-    private readonly AppDbContext _context;
-    public PlansController(AppDbContext context)
+    private readonly PlanService _planService;
+    public PlansController(PlanService planService)
     {
-        _context = context;
+        _planService = planService;
     }
 
     [HttpGet]
     public ActionResult<List<Plan>> GetAll()
     {
-        var plany = _context.Plany
-        .Include(plany => plany.Cwiczenia)
-        .ToList();
-
-        return Ok(plany);
+        return Ok(_planService.GetAllPlans());
     }
+    
 
     [HttpGet("{id}")]
     public ActionResult<Plan> GetById(int id)
     {
-        var plan = _context.Plany
-        .Include(p => p.Cwiczenia)
-        .FirstOrDefault(p => p.Id == id);
+        var plan = _planService.GetPlanById(id);
         if(plan == null)
         {
             return NotFound();
@@ -41,45 +35,33 @@ public class PlansController : ControllerBase
     [HttpPost]
     public ActionResult<Plan> CreatePlan([FromBody] Plan plan)
     {
-        _context.Plany.Add(plan);
-        _context.SaveChanges();
+        _planService.CreatePlan(plan);
         return CreatedAtAction(nameof(GetById), new {id = plan.Id}, plan);
     }
 
     [HttpDelete("{id}")]
-    public ActionResult<Plan> DeletePlan(int id)
+    public ActionResult DeletePlan(int id)
     {
-        var plan = _context.Plany.Find(id);
-        if(plan == null)
+        var plan = _planService.DeletePlanById(id);
+        if(plan == 0)
         {
             return NotFound();
         }
-        else if(_context.HistoriaTreningow.Any(h => h.PlanId == id))
+        else if(plan == -1)
         {
             return BadRequest("Plan ma wpis w historii i nie może być usunięty");
         }
-        _context.Plany.Remove(plan);
-        _context.SaveChanges();
         return Ok();
     }
 
     [HttpPut("{id}")]
     public ActionResult<Plan> UpdatePlan(int id, [FromBody] Plan updatedPlan)
     {
-        var plan = _context.Plany
-        .Include(plan => plan.Cwiczenia)
-        .FirstOrDefault(plan => plan.Id == id);
-        if(plan == null)
+        var plan = _planService.UpdatePlan(id, updatedPlan);
+        if(plan == 0)
         {
             return NotFound();
         }
-        plan.Nazwa = updatedPlan.Nazwa;
-        plan.Poziom = updatedPlan.Poziom;
-        plan.Rodzaj = updatedPlan.Rodzaj;
-        plan.IloscObwodow = updatedPlan.IloscObwodow;
-        plan.PrzerwaMiedzyObwodami = updatedPlan.PrzerwaMiedzyObwodami;
-        plan.Cwiczenia = updatedPlan.Cwiczenia;
-        _context.SaveChanges();
-        return Ok(plan);
+        return Ok();
     }
 }
