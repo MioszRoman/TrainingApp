@@ -56,9 +56,9 @@ public class PlansController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public ActionResult UpdatePlan(int id, [FromBody] Plan updatedPlan)
+    public ActionResult UpdatePlan(int id, [FromBody] UpdatePlanDto dto)
     {
-        var result = _planService.UpdatePlan(id, updatedPlan);
+        var result = _planService.UpdatePlan(id, dto);
         if(result == 0)
         {
             return NotFound();

@@ -49,7 +49,7 @@ public class PlanService
         _context.SaveChanges();
         return 1;
     }
-    public int UpdatePlan(int id, Plan updatedPlan)
+    public int UpdatePlan(int id, UpdatePlanDto dto)
     {
         var plan = _context.Plany
         .Include(plan => plan.Cwiczenia)
@@ -58,12 +58,12 @@ public class PlanService
         {
             return 0;
         }
-        plan.Nazwa = updatedPlan.Nazwa;
-        plan.Poziom = updatedPlan.Poziom;
-        plan.Rodzaj = updatedPlan.Rodzaj;
-        plan.IloscObwodow = updatedPlan.IloscObwodow;
-        plan.PrzerwaMiedzyObwodami = updatedPlan.PrzerwaMiedzyObwodami;
-        plan.Cwiczenia = updatedPlan.Cwiczenia;
+        plan.Nazwa = dto.Nazwa;
+        plan.Poziom = dto.Poziom;
+        plan.Rodzaj = dto.Rodzaj;
+        plan.IloscObwodow = dto.IloscObwodow;
+        plan.PrzerwaMiedzyObwodami = dto.PrzerwaMiedzyObwodami;
+        //plan.Cwiczenia = dto.Cwiczenia;
         _context.SaveChanges();
         return 1;
     }
