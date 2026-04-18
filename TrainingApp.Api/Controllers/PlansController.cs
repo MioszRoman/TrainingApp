@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using TrainingApp.Api.Models;
 using TrainingApp.Api.Services;
+using TrainingApp.Api.Dtos;
 
 namespace TrainingApp.Api.Controllers;
 
@@ -33,21 +34,21 @@ public class PlansController : ControllerBase
     }
 
     [HttpPost]
-    public ActionResult<Plan> CreatePlan([FromBody] Plan plan)
+    public ActionResult<Plan> CreatePlan([FromBody] CreatePlanDto dto)
     {
-        _planService.CreatePlan(plan);
+        var plan = _planService.CreatePlan(dto);
         return CreatedAtAction(nameof(GetById), new {id = plan.Id}, plan);
     }
 
     [HttpDelete("{id}")]
     public ActionResult DeletePlan(int id)
     {
-        var plan = _planService.DeletePlanById(id);
-        if(plan == 0)
+        var result = _planService.DeletePlanById(id);
+        if(result == 0)
         {
             return NotFound();
         }
-        else if(plan == -1)
+        else if(result == -1)
         {
             return BadRequest("Plan ma wpis w historii i nie może być usunięty");
         }
@@ -55,10 +56,10 @@ public class PlansController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public ActionResult<Plan> UpdatePlan(int id, [FromBody] Plan updatedPlan)
+    public ActionResult UpdatePlan(int id, [FromBody] Plan updatedPlan)
     {
-        var plan = _planService.UpdatePlan(id, updatedPlan);
-        if(plan == 0)
+        var result = _planService.UpdatePlan(id, updatedPlan);
+        if(result == 0)
         {
             return NotFound();
         }

@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using TrainingApp.Api.Models;
 using TrainingApp.Api.Data;
+using TrainingApp.Api.Dtos;
 
 namespace TrainingApp.Api.Services;
 public class PlanService
@@ -26,11 +27,12 @@ public class PlanService
         .FirstOrDefault(p => p.Id == id);
         return plan;
     }
-    public Plan CreatePlan(Plan plan)
+    public Plan CreatePlan(CreatePlanDto dto)
     {
-        _context.Plany.Add(plan);
+        Plan createdPlan = new Plan(dto.Nazwa, dto.Poziom, dto.Rodzaj, dto.IloscObwodow, dto.PrzerwaMiedzyObwodami, new List<Cwiczenie>());
+        _context.Plany.Add(createdPlan);
         _context.SaveChanges();
-        return plan;
+        return createdPlan;
     }
     public int DeletePlanById(int id)
     {
