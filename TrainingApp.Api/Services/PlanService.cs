@@ -12,20 +12,56 @@ public class PlanService
         _context = context;
     }
 
-    public List<Plan> GetAllPlans()
+    public List<PlanDto> GetAllPlans()
     {
         var plany = _context.Plany
         .Include(plany => plany.Cwiczenia)
         .ToList();
 
-        return plany;
+        return plany.Select(p => new PlanDto
+        {
+            Id = p.Id,
+            Nazwa = p.Nazwa,
+            Poziom = p.Poziom,
+            Rodzaj = p.Rodzaj,
+            IloscObwodow = p.IloscObwodow,
+            PrzerwaMiedzyObwodami = p.PrzerwaMiedzyObwodami,
+            Cwiczenia = p.Cwiczenia.Select(c => new CwiczenieDto
+            {
+                Id = c.Id,
+                NazwaCwiczenia = c.NazwaCwiczenia,
+                LiczbaSerii = c.LiczbaSerii,
+                LiczbaPowtorzen = c.LiczbaPowtorzen,
+                PrzerwaMiedzySeriami = c.PrzerwaMiedzySeriami
+            }).ToList()
+        }).ToList();
     }
-    public Plan? GetPlanById(int id)
+    public PlanDto? GetPlanById(int id)
     {
         var plan = _context.Plany
         .Include(p => p.Cwiczenia)
         .FirstOrDefault(p => p.Id == id);
-        return plan;
+        if(plan == null)
+        {
+            return null;
+        }
+        return new PlanDto
+        {
+            Id = plan.Id,
+            Nazwa = plan.Nazwa,
+            Poziom = plan.Poziom,
+            Rodzaj = plan.Rodzaj,
+            IloscObwodow = plan.IloscObwodow,
+            PrzerwaMiedzyObwodami = plan.PrzerwaMiedzyObwodami,
+            Cwiczenia = plan.Cwiczenia.Select(c => new CwiczenieDto
+            {
+                Id = c.Id,
+                NazwaCwiczenia = c.NazwaCwiczenia,
+                LiczbaSerii = c.LiczbaSerii,
+                LiczbaPowtorzen = c.LiczbaPowtorzen,
+                PrzerwaMiedzySeriami = c.PrzerwaMiedzySeriami
+            }).ToList()
+        };
     }
     public Plan CreatePlan(CreatePlanDto dto)
     {

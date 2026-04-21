@@ -16,14 +16,14 @@ public class PlansController : ControllerBase
     }
 
     [HttpGet]
-    public ActionResult<List<Plan>> GetAll()
+    public ActionResult<List<PlanDto>> GetAll()
     {
         return Ok(_planService.GetAllPlans());
     }
     
 
     [HttpGet("{id}")]
-    public ActionResult<Plan> GetById(int id)
+    public ActionResult<PlanDto> GetById(int id)
     {
         var plan = _planService.GetPlanById(id);
         if(plan == null)
