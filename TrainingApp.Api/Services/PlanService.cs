@@ -63,6 +63,45 @@ public class PlanService
             }).ToList()
         };
     }
+    public List<CwiczenieDto> GetCwiczeniaByPlanId(int planId)
+    {
+        var plan = _context.Plany
+        .Include(p => p.Cwiczenia)
+        .FirstOrDefault(p => p.Id == planId);
+        if(plan == null)
+        {
+            return new List<CwiczenieDto>();
+        }
+        return plan.Cwiczenia.Select(c => new CwiczenieDto
+            {
+                Id = c.Id,
+                NazwaCwiczenia = c.NazwaCwiczenia,
+                LiczbaSerii = c.LiczbaSerii,
+                LiczbaPowtorzen = c.LiczbaPowtorzen,
+                PrzerwaMiedzySeriami = c.PrzerwaMiedzySeriami
+            }).ToList();
+    }
+    public CwiczenieDto? AddCwiczenieToPlan(int planId, CreateCwiczenieDto dto)
+    {
+        var plan = _context.Plany.FirstOrDefault(p => p.Id == planId);
+        if(plan == null)
+        {
+            return null;
+        }
+        var cwiczenie = new Cwiczenie(dto.NazwaCwiczenia, dto.LiczbaSerii, dto.LiczbaPowtorzen, dto.PrzerwaMiedzySeriami);
+        cwiczenie.PlanId = planId;
+
+        _context.Cwiczenia.Add(cwiczenie);
+        _context.SaveChanges();
+        return new CwiczenieDto
+        {
+            Id = cwiczenie.Id,
+            NazwaCwiczenia = cwiczenie.NazwaCwiczenia,
+            LiczbaSerii = cwiczenie.LiczbaSerii,
+            LiczbaPowtorzen = cwiczenie.LiczbaPowtorzen,
+            PrzerwaMiedzySeriami = cwiczenie.PrzerwaMiedzySeriami
+        };
+    }
     public Plan CreatePlan(CreatePlanDto dto)
     {
         Plan createdPlan = new Plan(dto.Nazwa, dto.Poziom, dto.Rodzaj, dto.IloscObwodow, dto.PrzerwaMiedzyObwodami, new List<Cwiczenie>());

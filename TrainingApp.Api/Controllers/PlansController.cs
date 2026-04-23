@@ -65,4 +65,20 @@ public class PlansController : ControllerBase
         }
         return Ok();
     }
+    [HttpGet("{id}/cwiczenia")]
+    public ActionResult<List<CwiczenieDto>> GetCwiczenia(int id)
+    {
+        var cwiczenia = _planService.GetCwiczeniaByPlanId(id);
+        return Ok(cwiczenia);
+    }
+    [HttpPost("{id}/cwiczenia")]
+    public ActionResult<CwiczenieDto> AddCwiczenie(int id, [FromBody] CreateCwiczenieDto dto)
+    {
+        var cwiczenie = _planService.AddCwiczenieToPlan(id, dto);
+        if(cwiczenie == null)
+        {
+            return NotFound();
+        }
+        return Ok(cwiczenie);
+    }
 }
