@@ -52,7 +52,7 @@ public class PlansController : ControllerBase
         {
             return BadRequest("Plan ma wpis w historii i nie może być usunięty");
         }
-        return Ok();
+        return NoContent();
     }
 
     [HttpPut("{id}")]
@@ -63,7 +63,7 @@ public class PlansController : ControllerBase
         {
             return NotFound();
         }
-        return Ok();
+        return NoContent();
     }
     [HttpGet("{id}/cwiczenia")]
     public ActionResult<List<CwiczenieDto>> GetCwiczenia(int id)
@@ -79,6 +79,6 @@ public class PlansController : ControllerBase
         {
             return NotFound();
         }
-        return Ok(cwiczenie);
+        return Created($"/api/cwiczenia/{cwiczenie.Id}",cwiczenie);
     }
 }

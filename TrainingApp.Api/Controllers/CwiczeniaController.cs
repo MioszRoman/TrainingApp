@@ -19,7 +19,7 @@ public class CwiczeniaController : ControllerBase
     {
         var result = _planService.UpdateCwiczenie(id, dto);
         if(result == 0) return NotFound();
-        return Ok();
+        return NoContent();
     }
 
     [HttpDelete("{id}")]
@@ -27,6 +27,6 @@ public class CwiczeniaController : ControllerBase
     {
         var result = _planService.DeleteCwiczenie(id);
         if(result == 0) return NotFound();
-        return Ok();
+        return NoContent();
     }
 }
