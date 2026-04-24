@@ -102,6 +102,28 @@ public class PlanService
             PrzerwaMiedzySeriami = cwiczenie.PrzerwaMiedzySeriami
         };
     }
+    public int UpdateCwiczenie(int id, UpdateCwiczenieDto dto)
+    {
+        var cwiczenie = _context.Cwiczenia.FirstOrDefault(c => c.Id == id);
+        if(cwiczenie == null)
+        {
+            return 0;
+        }
+        cwiczenie.NazwaCwiczenia = dto.NazwaCwiczenia;
+        cwiczenie.LiczbaSerii = dto.LiczbaSerii;
+        cwiczenie.LiczbaPowtorzen = dto.LiczbaPowtorzen;
+        cwiczenie.PrzerwaMiedzySeriami = dto.PrzerwaMiedzySeriami;
+        _context.SaveChanges();
+        return 1;
+    }
+    public int DeleteCwiczenie(int id)
+    {
+        var cwiczenie = _context.Cwiczenia.FirstOrDefault(c => c.Id == id);
+        if(cwiczenie == null) return 0;
+        _context.Cwiczenia.Remove(cwiczenie);
+        _context.SaveChanges();
+        return 1;
+    }
     public Plan CreatePlan(CreatePlanDto dto)
     {
         Plan createdPlan = new Plan(dto.Nazwa, dto.Poziom, dto.Rodzaj, dto.IloscObwodow, dto.PrzerwaMiedzyObwodami, new List<Cwiczenie>());
