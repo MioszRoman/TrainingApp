@@ -14,7 +14,7 @@ builder.Services.AddControllers()
 });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddScoped<PlanService>();
+builder.Services.AddScoped<IPlanService, PlanService>();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"))
 );

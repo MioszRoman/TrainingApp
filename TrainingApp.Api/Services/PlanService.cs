@@ -4,7 +4,7 @@ using TrainingApp.Api.Data;
 using TrainingApp.Api.Dtos;
 
 namespace TrainingApp.Api.Services;
-public class PlanService
+public class PlanService : IPlanService
 {
     private readonly AppDbContext _context;
     public PlanService(AppDbContext context)

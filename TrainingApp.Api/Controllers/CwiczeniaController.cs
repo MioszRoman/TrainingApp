@@ -8,7 +8,7 @@ namespace TrainingApp.Api.Controllers;
 [Route("api/[controller]")]
 public class CwiczeniaController : ControllerBase
 {
-    private readonly PlanService _planService;
+    private readonly IPlanService _planService;
     public CwiczeniaController(PlanService planService)
     {
         _planService = planService;
