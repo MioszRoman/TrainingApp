@@ -9,7 +9,7 @@ namespace TrainingApp.Api.Controllers;
 public class CwiczeniaController : ControllerBase
 {
     private readonly IPlanService _planService;
-    public CwiczeniaController(PlanService planService)
+    public CwiczeniaController(IPlanService planService)
     {
         _planService = planService;
     }

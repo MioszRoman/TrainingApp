@@ -10,15 +10,15 @@ namespace TrainingApp.Api.Controllers;
 public class PlansController : ControllerBase
 {
     private readonly IPlanService _planService;
-    public PlansController(PlanService planService)
+    public PlansController(IPlanService planService)
     {
         _planService = planService;
     }
 
     [HttpGet]
-    public ActionResult<List<PlanDto>> GetAll()
+    public ActionResult<List<PlanDto>> GetAll([FromQuery] int? poziom, [FromQuery] string? rodzaj)
     {
-        return Ok(_planService.GetAllPlans());
+        return Ok(_planService.GetAllPlans(poziom, rodzaj));
     }
     
 

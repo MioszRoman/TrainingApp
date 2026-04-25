@@ -12,12 +12,21 @@ public class PlanService : IPlanService
         _context = context;
     }
 
-    public List<PlanDto> GetAllPlans()
+    public List<PlanDto> GetAllPlans(int? poziom, string? rodzaj)
     {
-        var plany = _context.Plany
+        var query = _context.Plany
         .Include(plany => plany.Cwiczenia)
-        .ToList();
-
+        .AsQueryable();
+        if(poziom.HasValue)
+        {
+            query = query.Where(p => p.Poziom == poziom.Value);
+        }
+        if(!string.IsNullOrWhiteSpace(rodzaj))
+        {
+            string rodzajLower = rodzaj.ToLower();
+            query = query.Where(p => p.Rodzaj != null && p.Rodzaj.ToLower() == rodzajLower);
+        }
+        var plany = query.ToList();
         return plany.Select(p => new PlanDto
         {
             Id = p.Id,
