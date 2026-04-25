@@ -20,4 +20,11 @@ public class StatsController : ControllerBase
         if(stats == null) return NotFound();
         return Ok(stats);
     }
+    [HttpGet("most-frequent")]
+    public ActionResult<MostFrequentPlanDto> GetMostFrequent()
+    {
+        var result = _statsService.GetMostFrequentPlan();
+        if(result == null) return NotFound();
+        return Ok(result);
+    }
 }
