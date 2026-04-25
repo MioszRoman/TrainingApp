@@ -6,4 +6,5 @@ public interface IStatsService
 {
     StatsDto? GetStats();
     MostFrequentPlanDto? GetMostFrequentPlan();
+    StatsDto? GetLastWeekStats();
 }

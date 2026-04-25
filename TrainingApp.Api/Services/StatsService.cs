@@ -47,4 +47,20 @@ public class StatsService : IStatsService
             IloscWykonan = result.Ilosc
         };
     }
+    public StatsDto? GetLastWeekStats()
+    {
+        var weekAgo = DateTime.Now.AddDays(-7);
+        var historia = _context.HistoriaTreningow
+        .Where(h => h.DataTreningu >= weekAgo)
+        .ToList();
+        if(historia.Count == 0) return null;
+        return new StatsDto
+        {
+            LiczbaTreningow = historia.Count,
+            LacznyCzasSekundy = historia.Sum(h => h.CzasTrwania),
+            SredniCzasSekundy = historia.Average(h => h.CzasTrwania),
+            NajdluzszyTreningSekundy = historia.Max(h => h.CzasTrwania),
+            NajkrotszyTreningSekundy = historia.Min(h => h.CzasTrwania)
+        };
+    }
 }

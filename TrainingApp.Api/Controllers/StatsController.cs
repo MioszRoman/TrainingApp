@@ -27,4 +27,11 @@ public class StatsController : ControllerBase
         if(result == null) return NotFound();
         return Ok(result);
     }
+    [HttpGet("last-week")]
+    public ActionResult<StatsDto> GetLastWeek()
+    {
+        var stats = _statsService.GetLastWeekStats();
+        if(stats == null) return NotFound();
+        return Ok(stats);
+    }
 }
