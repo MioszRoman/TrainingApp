@@ -13,6 +13,8 @@ public class Plan
     public int PrzerwaMiedzyObwodami {get; set;}
     public List<Cwiczenie> Cwiczenia {get; set;} = new();
     public List<HistoriaTreningu> HistoriaTreningow {get; set;} = new();
+    public int UserId {get; set;}
+    public User? User {get; set;}
     public Plan()
     {
         

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using TrainingApp.Api.Data;
 using TrainingApp.Api.Services;
 using TrainingApp.Api.Middleware;
+using TrainingApp.Api.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +22,18 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
 var app = builder.Build();
+using(var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    if(!context.Users.Any())
+    {
+        context.Users.Add(new User
+        {
+            Username = "testUser"
+        });
+        context.SaveChanges();
+    }
+}
 app.UseMiddleware<ErrorHandlingMiddleware>();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

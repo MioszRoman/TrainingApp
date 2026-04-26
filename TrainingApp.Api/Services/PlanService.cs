@@ -17,6 +17,8 @@ public class PlanService : IPlanService
         var query = _context.Plany
         .Include(plany => plany.Cwiczenia)
         .AsQueryable();
+
+        query = query.Where(p => p.UserId == 1);
         if(poziom.HasValue)
         {
             query = query.Where(p => p.Poziom == poziom.Value);
@@ -49,7 +51,8 @@ public class PlanService : IPlanService
     {
         var plan = _context.Plany
         .Include(p => p.Cwiczenia)
-        .FirstOrDefault(p => p.Id == id);
+        .FirstOrDefault(p => p.Id == id && p.UserId == 1);
+        
         if(plan == null)
         {
             return null;
@@ -136,6 +139,7 @@ public class PlanService : IPlanService
     public Plan CreatePlan(CreatePlanDto dto)
     {
         Plan createdPlan = new Plan(dto.Nazwa, dto.Poziom, dto.Rodzaj, dto.IloscObwodow, dto.PrzerwaMiedzyObwodami, new List<Cwiczenie>());
+        createdPlan.UserId = 1;
         _context.Plany.Add(createdPlan);
         _context.SaveChanges();
         return createdPlan;
