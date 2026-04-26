@@ -12,7 +12,7 @@ public class PlanService : IPlanService
         _context = context;
     }
 
-    public List<PlanDto> GetAllPlans(int? poziom, string? rodzaj)
+    public List<PlanDto> GetAllPlans(int? poziom, string? rodzaj, int page, int pageSize)
     {
         var query = _context.Plany
         .Include(plany => plany.Cwiczenia)
@@ -28,6 +28,13 @@ public class PlanService : IPlanService
             string rodzajLower = rodzaj.ToLower();
             query = query.Where(p => p.Rodzaj != null && p.Rodzaj.ToLower() == rodzajLower);
         }
+        if(page < 1) page = 1;
+        if(pageSize < 1) pageSize = 10;
+        if(pageSize > 50) pageSize = 50;
+        query = query
+        .OrderBy(p => p.Id)
+        .Skip((page - 1) * pageSize)
+        .Take(pageSize);
         var plany = query.ToList();
         return plany.Select(p => new PlanDto
         {

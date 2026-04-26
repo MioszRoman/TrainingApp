@@ -5,7 +5,7 @@ namespace TrainingApp.Api.Services;
 
 public interface IPlanService
 {
-    List<PlanDto> GetAllPlans(int? poziom, string? rodzaj);
+    List<PlanDto> GetAllPlans(int? poziom, string? rodzaj, int page, int pageSize);
     PlanDto? GetPlanById(int id);
     Plan CreatePlan(CreatePlanDto dto);
     int DeletePlanById(int id);

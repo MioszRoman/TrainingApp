@@ -16,9 +16,13 @@ public class PlansController : ControllerBase
     }
 
     [HttpGet]
-    public ActionResult<List<PlanDto>> GetAll([FromQuery] int? poziom, [FromQuery] string? rodzaj)
+    public ActionResult<List<PlanDto>> GetAll(
+        [FromQuery] int? poziom,
+        [FromQuery] string? rodzaj,
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 10)
     {
-        return Ok(_planService.GetAllPlans(poziom, rodzaj));
+        return Ok(_planService.GetAllPlans(poziom, rodzaj, page, pageSize));
     }
     
 
