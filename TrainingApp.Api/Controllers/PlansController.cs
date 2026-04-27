@@ -16,7 +16,7 @@ public class PlansController : ControllerBase
     }
 
     [HttpGet]
-    public ActionResult<List<PlanDto>> GetAll(
+    public ActionResult<PagedResultDto<PlanDto>> GetAll(
         [FromQuery] int? poziom,
         [FromQuery] string? rodzaj,
         [FromQuery] int page = 1,
