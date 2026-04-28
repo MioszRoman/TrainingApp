@@ -11,6 +11,32 @@ public class PlanService : IPlanService
     {
         _context = context;
     }
+    private CwiczenieDto MapToCwiczenieDto(Cwiczenie cwiczenie)
+    {
+        return new CwiczenieDto
+        {
+            Id = cwiczenie.Id,
+            NazwaCwiczenia = cwiczenie.NazwaCwiczenia,
+            LiczbaSerii = cwiczenie.LiczbaSerii,
+            LiczbaPowtorzen = cwiczenie.LiczbaPowtorzen,
+            PrzerwaMiedzySeriami = cwiczenie.PrzerwaMiedzySeriami
+        };
+    }
+    private PlanDto MapToPlanDto(Plan plan)
+    {
+        return new PlanDto
+        {
+            Id = plan.Id,
+            Nazwa = plan.Nazwa,
+            Poziom = plan.Poziom,
+            Rodzaj = plan.Rodzaj,
+            IloscObwodow = plan.IloscObwodow,
+            PrzerwaMiedzyObwodami = plan.PrzerwaMiedzyObwodami,
+            Cwiczenia = plan.Cwiczenia
+            .Select(c => MapToCwiczenieDto(c))
+            .ToList()
+        };
+    }
 
     public PagedResultDto<PlanDto> GetAllPlans(int? poziom, string? rodzaj, int page, int pageSize)
     {
@@ -38,23 +64,9 @@ public class PlanService : IPlanService
         .Skip((page - 1) * pageSize)
         .Take(pageSize);
         var plany = query.ToList();
-        var items = plany.Select(p => new PlanDto
-        {
-            Id = p.Id,
-            Nazwa = p.Nazwa,
-            Poziom = p.Poziom,
-            Rodzaj = p.Rodzaj,
-            IloscObwodow = p.IloscObwodow,
-            PrzerwaMiedzyObwodami = p.PrzerwaMiedzyObwodami,
-            Cwiczenia = p.Cwiczenia.Select(c => new CwiczenieDto
-            {
-                Id = c.Id,
-                NazwaCwiczenia = c.NazwaCwiczenia,
-                LiczbaSerii = c.LiczbaSerii,
-                LiczbaPowtorzen = c.LiczbaPowtorzen,
-                PrzerwaMiedzySeriami = c.PrzerwaMiedzySeriami
-            }).ToList()
-        }).ToList();
+        var items = plany.
+        Select(p => MapToPlanDto(p))
+        .ToList();
 
         return new PagedResultDto<PlanDto>
         {
@@ -75,23 +87,7 @@ public class PlanService : IPlanService
         {
             return null;
         }
-        return new PlanDto
-        {
-            Id = plan.Id,
-            Nazwa = plan.Nazwa,
-            Poziom = plan.Poziom,
-            Rodzaj = plan.Rodzaj,
-            IloscObwodow = plan.IloscObwodow,
-            PrzerwaMiedzyObwodami = plan.PrzerwaMiedzyObwodami,
-            Cwiczenia = plan.Cwiczenia.Select(c => new CwiczenieDto
-            {
-                Id = c.Id,
-                NazwaCwiczenia = c.NazwaCwiczenia,
-                LiczbaSerii = c.LiczbaSerii,
-                LiczbaPowtorzen = c.LiczbaPowtorzen,
-                PrzerwaMiedzySeriami = c.PrzerwaMiedzySeriami
-            }).ToList()
-        };
+        return MapToPlanDto(plan);
     }
     public List<CwiczenieDto> GetCwiczeniaByPlanId(int planId)
     {
@@ -102,14 +98,9 @@ public class PlanService : IPlanService
         {
             return new List<CwiczenieDto>();
         }
-        return plan.Cwiczenia.Select(c => new CwiczenieDto
-            {
-                Id = c.Id,
-                NazwaCwiczenia = c.NazwaCwiczenia,
-                LiczbaSerii = c.LiczbaSerii,
-                LiczbaPowtorzen = c.LiczbaPowtorzen,
-                PrzerwaMiedzySeriami = c.PrzerwaMiedzySeriami
-            }).ToList();
+        return plan.Cwiczenia
+        .Select(c => MapToCwiczenieDto(c))
+        .ToList();
     }
     public CwiczenieDto? AddCwiczenieToPlan(int planId, CreateCwiczenieDto dto)
     {
@@ -123,14 +114,7 @@ public class PlanService : IPlanService
 
         _context.Cwiczenia.Add(cwiczenie);
         _context.SaveChanges();
-        return new CwiczenieDto
-        {
-            Id = cwiczenie.Id,
-            NazwaCwiczenia = cwiczenie.NazwaCwiczenia,
-            LiczbaSerii = cwiczenie.LiczbaSerii,
-            LiczbaPowtorzen = cwiczenie.LiczbaPowtorzen,
-            PrzerwaMiedzySeriami = cwiczenie.PrzerwaMiedzySeriami
-        };
+        return MapToCwiczenieDto(cwiczenie);
     }
     public int UpdateCwiczenie(int id, UpdateCwiczenieDto dto)
     {
