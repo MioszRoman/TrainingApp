@@ -7,9 +7,11 @@ namespace TrainingApp.Api.Services;
 public class PlanService : IPlanService
 {
     private readonly AppDbContext _context;
-    public PlanService(AppDbContext context)
+    private readonly ICurrentUserService _currentUserService;
+    public PlanService(AppDbContext context, ICurrentUserService currentUserService)
     {
         _context = context;
+        _currentUserService = currentUserService;
     }
     private CwiczenieDto MapToCwiczenieDto(Cwiczenie cwiczenie)
     {
@@ -40,11 +42,12 @@ public class PlanService : IPlanService
 
     public PagedResultDto<PlanDto> GetAllPlans(int? poziom, string? rodzaj, int page, int pageSize)
     {
+        int userId = _currentUserService.GetCurrentUserId();
         var query = _context.Plany
         .Include(plany => plany.Cwiczenia)
         .AsQueryable();
 
-        query = query.Where(p => p.UserId == 1);
+        query = query.Where(p => p.UserId == userId);
         if(poziom.HasValue)
         {
             query = query.Where(p => p.Poziom == poziom.Value);
@@ -79,9 +82,10 @@ public class PlanService : IPlanService
     }
     public PlanDto? GetPlanById(int id)
     {
+        int userId = _currentUserService.GetCurrentUserId();
         var plan = _context.Plany
         .Include(p => p.Cwiczenia)
-        .FirstOrDefault(p => p.Id == id && p.UserId == 1);
+        .FirstOrDefault(p => p.Id == id && p.UserId == userId);
         
         if(plan == null)
         {
@@ -140,15 +144,17 @@ public class PlanService : IPlanService
     }
     public Plan CreatePlan(CreatePlanDto dto)
     {
+        int userId = _currentUserService.GetCurrentUserId();
         Plan createdPlan = new Plan(dto.Nazwa, dto.Poziom, dto.Rodzaj, dto.IloscObwodow, dto.PrzerwaMiedzyObwodami, new List<Cwiczenie>());
-        createdPlan.UserId = 1;
+        createdPlan.UserId = userId;
         _context.Plany.Add(createdPlan);
         _context.SaveChanges();
         return createdPlan;
     }
     public int DeletePlanById(int id)
     {
-        var plan = _context.Plany.Find(id);
+        int userId = _currentUserService.GetCurrentUserId();
+        var plan = _context.Plany.FirstOrDefault(p => p.Id == id & p.UserId == userId);
         if(plan == null)
         {
             return 0;
@@ -163,9 +169,10 @@ public class PlanService : IPlanService
     }
     public int UpdatePlan(int id, UpdatePlanDto dto)
     {
+        int userId = _currentUserService.GetCurrentUserId();
         var plan = _context.Plany
         .Include(plan => plan.Cwiczenia)
-        .FirstOrDefault(plan => plan.Id == id);
+        .FirstOrDefault(plan => plan.Id == id && plan.UserId == userId);
         if(plan == null)
         {
             return 0;
