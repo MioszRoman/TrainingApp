@@ -24,4 +24,15 @@ public class AuthController : ControllerBase
         }
         return Ok("Użytkownik został zarejestrowany.");
     }
+
+    [HttpPost("login")]
+    public ActionResult<AuthResponseDto> Login([FromBody] LoginDto dto)
+    {
+        var result = _authService.Login(dto);
+        if(result == null)
+        {
+            return Unauthorized("Nieprawidłowy login lub hasło.");
+        }
+        return Ok(result);
+    }
 }
