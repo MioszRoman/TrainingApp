@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using TrainingApp.Api.Dtos;
 using TrainingApp.Api.Services;
 
@@ -6,6 +7,7 @@ namespace TrainingApp.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class CwiczeniaController : ControllerBase
 {
     private readonly IPlanService _planService;

@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using TrainingApp.Api.Services;
 using TrainingApp.Api.Dtos;
 
@@ -6,6 +7,7 @@ namespace TrainingApp.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class StatsController : ControllerBase
 {
     private readonly IStatsService _statsService;
